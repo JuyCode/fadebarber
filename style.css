@@ -9,69 +9,88 @@ body {
 
 header {
     text-align: center;
-    padding: 40px 20px;
+    padding: 30px 20px;
     background-color: #1a1a1a;
-    border-bottom: 2px solid #d4af37; /* Detalle dorado */
+    border-bottom: 2px solid #d4af37;
 }
 
 header h1 {
     color: #d4af37;
-    margin: 0 0 10px 0;
+    margin: 0 0 5px 0;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Secciones de Reserva */
+/* Control de Pasos (Lógica del Wizard) */
 .booking-section {
+    display: none; /* Por defecto ocultos */
     background-color: #1a1a1a;
-    margin-bottom: 25px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.booking-section.active {
+    display: block; /* Solo se ve el que tiene la clase active */
 }
 
 .booking-section h2 {
     color: #d4af37;
     margin-top: 0;
     border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-    font-size: 1.3rem;
+    padding-bottom: 12px;
+    font-size: 1.4rem;
 }
 
-/* Grillas y Opciones Simuladas como Botones */
+/* Grillas */
 .cards-grid, .payment-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
-    margin-top: 15px;
+    margin: 20px 0;
 }
 
 .time-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
-    margin-top: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
 }
 
-/* Ocultar el radio button nativo pero mantener su funcionalidad */
+/* Ocultar Inputs de Radio */
 .card-option input, .time-option input, .payment-card input {
     display: none;
 }
 
-/* Diseño de las Tarjetas */
+/* Tarjetas e Interactividad */
 .card-content, .time-option span {
     display: block;
-    padding: 15px;
-    background-color: #262626;
+    padding: 20px 15px;
+    background-color: #242424;
     border: 2px solid #333;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
+}
+
+/* Estilo para simular la foto/avatar del barbero */
+.avatar {
+    width: 60px;
+    height: 60px;
+    background-color: #d4af37;
+    color: #121212;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 12px auto;
 }
 
 .card-content h3 {
@@ -81,65 +100,87 @@ header h1 {
 
 .card-content p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #aaa;
 }
 
-/* Efecto Visual al Seleccionar una Opción */
+/* Feedback de Selección */
 .card-option input:checked + .card-content,
-.time-option input:checked +span,
+.time-option input:checked + span,
 .payment-card input:checked + .card-content {
     border-color: #d4af37;
-    background-color: #2a2415;
+    background-color: #2d2514;
 }
 
 .time-option span {
-    padding: 10px;
+    padding: 12px;
     font-weight: bold;
 }
 
-/* Botón de Confirmación */
-.action-container {
-    text-align: center;
-    margin-top: 30px;
+/* Formularios de entrada */
+.date-picker-container, .client-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 20px 0;
 }
 
-.btn-confirmar {
-    background-color: #d4af37;
-    color: #121212;
-    border: none;
-    padding: 15px 40px;
-    font-size: 1.1rem;
+input[type="date"], input[type="text"], input[type="tel"] {
+    background-color: #242424;
+    border: 2px solid #333;
+    color: #fff;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+}
+
+input:focus {
+    border-color: #d4af37;
+}
+
+/* Botones de Navegación */
+.action-container {
+    margin-top: 25px;
+    text-align: right;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    padding: 12px 28px;
+    font-size: 1rem;
     font-weight: bold;
     border-radius: 6px;
     cursor: pointer;
+    border: none;
     transition: background 0.2s;
 }
 
-.btn-confirmar:hover {
+.btn-next, .btn-confirmar {
+    background-color: #d4af37;
+    color: #121212;
+}
+
+.btn-next:hover, .btn-confirmar:hover {
     background-color: #f3c63f;
 }
 
-/* Footer y Enlace WhatsApp */
+.btn-prev {
+    background-color: #444;
+    color: #fff;
+}
+
+.btn-prev:hover {
+    background-color: #555;
+}
+
 footer {
     text-align: center;
-    padding: 30px 20px;
-    background-color: #1a1a1a;
-    margin-top: 40px;
-    border-top: 1px solid #333;
-}
-
-footer p {
-    margin: 0 0 10px 0;
-}
-
-.whatsapp-link {
-    color: #25d366; /* Verde WhatsApp */
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-.whatsapp-link:hover {
-    text-decoration: underline;
+    padding: 20px;
+    color: #666;
+    font-size: 0.9rem;
 }

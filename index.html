@@ -9,35 +9,44 @@
 <body>
 
     <header>
-        <h1>Bienvenido a la Barbería</h1>
-        <p>Ofrecemos los mejores servicios de corte de cabello y afeitado.</p>
+        <h1>Reserva tu Turno</h1>
+        <p>Elegí tu barbero y horario en simples pasos</p>
     </header>
 
     <main class="container">
-        <!-- PASO 1: SELECCIÓN DE BARBERO -->
-        <section class="booking-section">
+        <section id="step-1" class="booking-section active">
             <h2>1. Selecciona tu Barbero</h2>
             <div class="cards-grid">
                 <label class="card-option">
-                    <input type="radio" name="barber" value="marcos">
+                    <input type="radio" name="barber" value="Marcos">
                     <div class="card-content">
+                        <div class="avatar">M</div>
                         <h3>Marcos</h3>
-                        <p>Especialista en degradados y barba</p>
+                        <p>Degradados y Barba</p>
                     </div>
                 </label>
                 <label class="card-option">
-                    <input type="radio" name="barber" value="franco">
+                    <input type="radio" name="barber" value="Franco">
                     <div class="card-content">
+                        <div class="avatar">F</div>
                         <h3>Franco</h3>
-                        <p>Cortes clásicos y tijera</p>
+                        <p>Cortes Clásicos</p>
                     </div>
                 </label>
             </div>
+            <div class="action-container">
+                <button class="btn-next" onclick="nextStep(2)">Siguiente</button>
+            </div>
         </section>
 
-        <!-- PASO 2: SELECCIÓN DE HORARIOS -->
-        <section class="booking-section">
-            <h2>2. Selecciona el Horario</h2>
+        <section id="step-2" class="booking-section">
+            <h2>2. Fecha y Horario</h2>
+            
+            <div class="date-picker-container">
+                <label for="appointment-date">Elegí el día:</label>
+                <input type="date" id="appointment-date" name="appointment-date">
+            </div>
+
             <div class="time-grid">
                 <label class="time-option">
                     <input type="radio" name="time" value="09:00">
@@ -56,42 +65,51 @@
                     <span>17:00 PM</span>
                 </label>
             </div>
-        </section>
-
-        <!-- PASO 3: MÉTODO DE PAGO -->
-        <section class="booking-section">
-            <h2>3. Método de Pago</h2>
-            <div class="payment-options">
-                <label class="payment-card">
-                    <input type="radio" name="payment" value="efectivo">
-                    <div class="card-content">
-                        <h3>Efectivo</h3>
-                        <p>Pagas en el local</p>
-                    </div>
-                </label>
-                <label class="payment-card">
-                    <input type="radio" name="payment" value="mercadopago">
-                    <div class="card-content">
-                        <h3>Mercado Pago</h3>
-                        <p>Transferencia o tarjeta</p>
-                    </div>
-                </label>
+            <div class="action-container navigation-buttons">
+                <button class="btn-prev" onclick="prevStep(1)">Atrás</button>
+                <button class="btn-next" onclick="nextStep(3)">Siguiente</button>
             </div>
         </section>
 
-        <!-- BOTÓN DE CONFIRMACIÓN -->
-        <div class="action-container">
-            <button class="btn-confirmar">Confirmar Turno</button>
-        </div>
+        <section id="step-3" class="booking-section">
+            <h2>3. Pago y Contacto</h2>
+            
+            <div class="payment-options">
+                <label class="payment-card">
+                    <input type="radio" name="payment" value="Efectivo">
+                    <div class="card-content">
+                        <h3>Efectivo</h3>
+                        <p>Abonás en el local</p>
+                    </div>
+                </label>
+                <label class="payment-card">
+                    <input type="radio" name="payment" value="Mercado Pago">
+                    <div class="card-content">
+                        <h3>Mercado Pago</h3>
+                        <p>Transferencia / Tarjeta</p>
+                    </div>
+                </label>
+            </div>
+
+            <div class="client-info-container">
+                <label for="client-name">Tu Nombre:</label>
+                <input type="text" id="client-name" placeholder="Ej: Luis Catorcino" required>
+
+                <label for="client-phone">Tu número de WhatsApp:</label>
+                <input type="tel" id="client-phone" placeholder="Ej: 3884XXXXXX" required>
+            </div>
+
+            <div class="action-container navigation-buttons">
+                <button class="btn-prev" onclick="prevStep(2)">Atrás</button>
+                <button class="btn-confirmar" onclick="confirmarTurno()">Confirmar Turno 📱</button>
+            </div>
+        </section>
     </main>
 
-    <!-- PIE DE PÁGINA / CONTACTO -->
     <footer>
-        <p>¿Necesitas ayuda? Contactanos por WhatsApp:</p>
-        <a href="https://wa.me/549388XXXXXXX" class="whatsapp-link" target="_blank">
-            📱 +54 9 388 XXX-XXXX
-        </a>
+        <p>¿Consultas? Escribinos directamente al +54 9 388 XXX-XXXX</p>
     </footer>
 
+    <script src="script.js"></script>
 </body>
 </html>
