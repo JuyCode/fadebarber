@@ -1,5 +1,145 @@
+/* Estilos Generales */
 body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 40px 20px;
     background-color: #1a1a1a;
-    color: white;
-    font-family: sans-serif;
+    border-bottom: 2px solid #d4af37; /* Detalle dorado */
+}
+
+header h1 {
+    color: #d4af37;
+    margin: 0 0 10px 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Secciones de Reserva */
+.booking-section {
+    background-color: #1a1a1a;
+    margin-bottom: 25px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.booking-section h2 {
+    color: #d4af37;
+    margin-top: 0;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+/* Grillas y Opciones Simuladas como Botones */
+.cards-grid, .payment-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Ocultar el radio button nativo pero mantener su funcionalidad */
+.card-option input, .time-option input, .payment-card input {
+    display: none;
+}
+
+/* Diseño de las Tarjetas */
+.card-content, .time-option span {
+    display: block;
+    padding: 15px;
+    background-color: #262626;
+    border: 2px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.card-content h3 {
+    margin: 0 0 5px 0;
+    color: #fff;
+}
+
+.card-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+/* Efecto Visual al Seleccionar una Opción */
+.card-option input:checked + .card-content,
+.time-option input:checked +span,
+.payment-card input:checked + .card-content {
+    border-color: #d4af37;
+    background-color: #2a2415;
+}
+
+.time-option span {
+    padding: 10px;
+    font-weight: bold;
+}
+
+/* Botón de Confirmación */
+.action-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.btn-confirmar {
+    background-color: #d4af37;
+    color: #121212;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-confirmar:hover {
+    background-color: #f3c63f;
+}
+
+/* Footer y Enlace WhatsApp */
+footer {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: #1a1a1a;
+    margin-top: 40px;
+    border-top: 1px solid #333;
+}
+
+footer p {
+    margin: 0 0 10px 0;
+}
+
+.whatsapp-link {
+    color: #25d366; /* Verde WhatsApp */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.whatsapp-link:hover {
+    text-decoration: underline;
 }

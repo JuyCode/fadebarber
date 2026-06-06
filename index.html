@@ -3,11 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barberia</title>
+    <title>Barbería - Reserva de Turnos</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Bienvenido a la Barberia</h1>
-    <p>Ofrecemos los mejores servicios de corte de cabello y afeitado.</p>
+
+    <header>
+        <h1>Bienvenido a la Barbería</h1>
+        <p>Ofrecemos los mejores servicios de corte de cabello y afeitado.</p>
+    </header>
+
+    <main class="container">
+        <!-- PASO 1: SELECCIÓN DE BARBERO -->
+        <section class="booking-section">
+            <h2>1. Selecciona tu Barbero</h2>
+            <div class="cards-grid">
+                <label class="card-option">
+                    <input type="radio" name="barber" value="marcos">
+                    <div class="card-content">
+                        <h3>Marcos</h3>
+                        <p>Especialista en degradados y barba</p>
+                    </div>
+                </label>
+                <label class="card-option">
+                    <input type="radio" name="barber" value="franco">
+                    <div class="card-content">
+                        <h3>Franco</h3>
+                        <p>Cortes clásicos y tijera</p>
+                    </div>
+                </label>
+            </div>
+        </section>
+
+        <!-- PASO 2: SELECCIÓN DE HORARIOS -->
+        <section class="booking-section">
+            <h2>2. Selecciona el Horario</h2>
+            <div class="time-grid">
+                <label class="time-option">
+                    <input type="radio" name="time" value="09:00">
+                    <span>09:00 AM</span>
+                </label>
+                <label class="time-option">
+                    <input type="radio" name="time" value="10:00">
+                    <span>10:00 AM</span>
+                </label>
+                <label class="time-option">
+                    <input type="radio" name="time" value="16:00">
+                    <span>16:00 PM</span>
+                </label>
+                <label class="time-option">
+                    <input type="radio" name="time" value="17:00">
+                    <span>17:00 PM</span>
+                </label>
+            </div>
+        </section>
+
+        <!-- PASO 3: MÉTODO DE PAGO -->
+        <section class="booking-section">
+            <h2>3. Método de Pago</h2>
+            <div class="payment-options">
+                <label class="payment-card">
+                    <input type="radio" name="payment" value="efectivo">
+                    <div class="card-content">
+                        <h3>Efectivo</h3>
+                        <p>Pagas en el local</p>
+                    </div>
+                </label>
+                <label class="payment-card">
+                    <input type="radio" name="payment" value="mercadopago">
+                    <div class="card-content">
+                        <h3>Mercado Pago</h3>
+                        <p>Transferencia o tarjeta</p>
+                    </div>
+                </label>
+            </div>
+        </section>
+
+        <!-- BOTÓN DE CONFIRMACIÓN -->
+        <div class="action-container">
+            <button class="btn-confirmar">Confirmar Turno</button>
+        </div>
+    </main>
+
+    <!-- PIE DE PÁGINA / CONTACTO -->
+    <footer>
+        <p>¿Necesitas ayuda? Contactanos por WhatsApp:</p>
+        <a href="https://wa.me/549388XXXXXXX" class="whatsapp-link" target="_blank">
+            📱 +54 9 388 XXX-XXXX
+        </a>
+    </footer>
+
 </body>
 </html>
