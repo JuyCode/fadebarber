@@ -1,6 +1,6 @@
-// Función para avanzar de paso
+// Función para avanzar de paso con validaciones
 function nextStep(stepNumber) {
-    // Validaciones básicas antes de avanzar
+    // Validación del Paso 1: Seleccionar Barbero
     if (stepNumber === 2) {
         const barberSelected = document.querySelector('input[name="barber"]:checked');
         if (!barberSelected) {
@@ -8,7 +8,16 @@ function nextStep(stepNumber) {
             return;
         }
     }
+    // Validación del Paso 2: Seleccionar Servicio
     if (stepNumber === 3) {
+        const serviceSelected = document.querySelector('input[name="service"]:checked');
+        if (!serviceSelected) {
+            alert("Por favor, selecciona un servicio primero.");
+            return;
+        }
+    }
+    // Validación del Paso 3: Seleccionar Fecha y Hora
+    if (stepNumber === 4) {
         const dateSelected = document.getElementById('appointment-date').value;
         const timeSelected = document.querySelector('input[name="time"]:checked');
         if (!dateSelected || !timeSelected) {
@@ -17,12 +26,12 @@ function nextStep(stepNumber) {
         }
     }
 
-    // Ocultar todas las secciones y activar la siguiente
+    // Cambiar visualmente de sección
     document.querySelectorAll('.booking-section').forEach(section => {
         section.classList.remove('active');
     });
-    document.getElementById(`step-3`).scrollIntoView({ behavior: 'smooth' }); // Corrección visual rápida
     document.getElementById(`step-${stepNumber}`).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Sube la pantalla al inicio del paso
 }
 
 // Función para retroceder de paso
@@ -31,42 +40,41 @@ function prevStep(stepNumber) {
         section.classList.remove('active');
     });
     document.getElementById(`step-${stepNumber}`).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Función final para confirmar y enviar a WhatsApp
+// Confirmar y compilar mensaje para WhatsApp
 function confirmarTurno() {
     const barbero = document.querySelector('input[name="barber"]:checked').value;
+    const servicio = document.querySelector('input[name="service"]:checked').value;
     const fecha = document.getElementById('appointment-date').value;
     const hora = document.querySelector('input[name="time"]:checked').value;
     const pago = document.querySelector('input[name="payment"]:checked');
     const nombre = document.getElementById('client-name').value.trim();
     const telefonoCliente = document.getElementById('client-phone').value.trim();
 
-    // Validar que el paso 3 esté completo
+    // Validar campos de contacto finales
     if (!pago || !nombre || !telefonoCliente) {
         alert("Por favor, completa todos los datos de contacto y el método de pago.");
         return;
     }
 
-    // Formatear la fecha para que se lea mejor (opcional)
     const fechaFormateada = fecha.split('-').reverse().join('/');
 
-    // Tu número de teléfono de la barbería adonde llegará el mensaje (Código de país + área + número sin el 15)
-    // Ejemplo para Jujuy: 5493884123456
-    const tuNumeroWhatsApp = "5493884418917"; 
+    // Configura acá tu número real de la barbería (ej: 5493884123456)
+    const tuNumeroWhatsApp = "549388XXXXXXX"; 
 
-    // Estructuramos el mensaje de texto automático
+    // Mensaje automático estructurado incluyendo el servicio elegido
     const mensaje = `Hola! Me gustaría confirmar un turno:%0A` +
                     `💈 *Barbero:* ${barbero}%0A` +
+                    `✂️ *Servicio:* ${servicio}%0A` +
                     `📅 *Fecha:* ${fechaFormateada}%0A` +
                     `⏰ *Hora:* ${hora} hs%0A` +
                     `💳 *Pago:* ${pago.value}%0A` +
                     `👤 *Cliente:* ${nombre}%0A` +
                     `📱 *WhatsApp:* ${telefonoCliente}`;
 
-    // Creamos el enlace de la API de WhatsApp
     const urlWhatsApp = `https://wa.me/${tuNumeroWhatsApp}?text=${mensaje}`;
 
-    // Abrimos el chat de WhatsApp en una pestaña nueva
     window.open(urlWhatsApp, '_blank');
 }

@@ -1,186 +1,287 @@
-/* Estilos Generales */
+/* ==========================================================================
+   PALETA INSTAGRAM PREMIUM + DETALLES DORADOS MINIMALISTAS (COMPLETO)
+   ========================================================================== */
+
+/* 1. Estilos Generales y Base */
 body {
-    background-color: #121212;
-    color: #e0e0e0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff; /* Fondo blanco puro */
+    color: #000000; /* Texto negro puro para máximo contraste */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
 
 header {
     text-align: center;
-    padding: 30px 20px;
-    background-color: #1a1a1a;
-    border-bottom: 2px solid #d4af37;
+    padding: 45px 20px 25px 20px;
+    background-color: #ffffff;
 }
 
 header h1 {
-    color: #d4af37;
-    margin: 0 0 5px 0;
+    color: #000000;
+    margin: 0 0 6px 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+header p {
+    color: #737373; /* Gris clásico de subtítulos de Instagram */
+    margin: 0;
+    font-size: 0.95rem;
 }
 
 .container {
-    max-width: 600px;
+    max-width: 500px; /* Ancho ideal para pantallas de celular */
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px 16px;
 }
 
-/* Control de Pasos (Lógica del Wizard) */
+/* 2. Secciones del Proceso (Pasos controlados por JS) */
 .booking-section {
-    display: none; /* Por defecto ocultos */
-    background-color: #1a1a1a;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    display: none; /* Ocultas por defecto */
+    background-color: #ffffff;
+    margin-bottom: 20px;
 }
 
 .booking-section.active {
-    display: block; /* Solo se ve el que tiene la clase active */
+    display: block; /* Solo se muestra la sección activa */
 }
 
 .booking-section h2 {
-    color: #d4af37;
+    color: #000000;
     margin-top: 0;
-    border-bottom: 1px solid #333;
-    padding-bottom: 12px;
-    font-size: 1.4rem;
+    margin-bottom: 24px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.2px;
 }
 
-/* Grillas */
+/* 3. Grillas de Opciones (Estructura de Bloques) */
 .cards-grid, .payment-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 12px;
     margin: 20px 0;
 }
 
 .time-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 8px;
     margin: 20px 0;
 }
 
-/* Ocultar Inputs de Radio */
-.card-option input, .time-option input, .payment-card input {
+/* Ocultar los botones de opción nativos (los círculos para marcar) */
+.card-option input, .time-option input, .payment-card input, .service-option input {
     display: none;
 }
 
-/* Tarjetas e Interactividad */
-.card-content, .time-option span {
+/* 4. Tarjetas Base (Barberos y Pagos) antes de ser seleccionadas */
+.card-content {
     display: block;
-    padding: 20px 15px;
-    background-color: #242424;
-    border: 2px solid #333;
+    padding: 24px 12px;
+    background-color: #fafafa; /* Gris ultra claro de fondo (estilo Instagram) */
+    border: 1px solid #dbdbdb;  /* Borde fino y sutil */
     border-radius: 8px;
     cursor: pointer;
     text-align: center;
-    transition: all 0.25s ease;
+    transition: all 0.15s ease-out;
 }
 
-/* Estilo para simular la foto/avatar del barbero */
+/* Logos/Avatares Circulares con Inicial de los Barberos */
 .avatar {
-    width: 60px;
-    height: 60px;
-    background-color: #d4af37;
-    color: #121212;
+    width: 72px;
+    height: 72px;
+    background-color: #1a1a1a; 
+    color: #ffffff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0 auto 12px auto;
+    font-weight: 600;
+    margin: 0 auto 14px auto;
+    border: 2px solid #d4af37; /* Borde dorado alrededor de la inicial */
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.15);
 }
 
 .card-content h3 {
-    margin: 0 0 5px 0;
-    color: #fff;
+    margin: 0 0 4px 0;
+    color: #000000;
+    font-size: 1.05rem;
+    font-weight: 600;
 }
 
 .card-content p {
     margin: 0;
-    font-size: 0.85rem;
-    color: #aaa;
+    font-size: 0.8rem;
+    color: #737373;
 }
 
-/* Feedback de Selección */
-.card-option input:checked + .card-content,
-.time-option input:checked + span,
-.payment-card input:checked + .card-content {
-    border-color: #d4af37;
-    background-color: #2d2514;
-}
-
-.time-option span {
-    padding: 12px;
-    font-weight: bold;
-}
-
-/* Formularios de entrada */
-.date-picker-container, .client-info-container {
+/* 5. Estructura de la Lista de Servicios (Paso 2) */
+.services-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     margin: 20px 0;
 }
 
+.service-content {
+    display: flex;
+    justify-content: space-between; /* Nombre a la izquierda, precio a la derecha */
+    align-items: center;
+    padding: 18px 16px;
+    background-color: #fafafa;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease-out;
+}
+
+.service-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #000000;
+}
+
+.service-price {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #000000;
+}
+
+/* 6. Botones de Horarios Base antes de ser seleccionados */
+.time-option span {
+    display: block;
+    padding: 14px;
+    background-color: #fafafa;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #262626;
+    transition: all 0.15s ease-out;
+}
+
+/* ==========================================================================
+   7. ESTADOS SELECCIONADOS (Únicamente Borde Dorado Fino y Limpio) 🌟
+   ========================================================================== */
+
+/* Selección de Barberos y Métodos de Pago */
+.card-option input:checked + .card-content,
+.payment-card input:checked + .card-content {
+    background-color: #ffffff; /* Mantiene fondo blanco */
+    border: 2px solid #d4af37; /* Solo se activa el contorno dorado */
+    padding-top: 23px;         /* Compensa el píxel extra de borde */
+    padding-bottom: 23px;
+}
+
+/* Selección de Servicios */
+.service-option input:checked + .service-content {
+    background-color: #ffffff; /* Mantiene fondo blanco */
+    border: 2px solid #d4af37; /* Solo se activa el contorno dorado */
+    padding-top: 17px;         /* Compensa el píxel extra de borde */
+    padding-bottom: 17px;
+}
+
+/* Mantiene el texto de los servicios en negro puro al seleccionarse */
+.service-option input:checked + .service-content .service-name,
+.service-option input:checked + .service-content .service-price {
+    color: #000000; 
+}
+
+/* Selección de Horarios */
+.time-option input:checked + span {
+    background-color: #ffffff; /* Mantiene fondo blanco */
+    border: 2px solid #d4af37; /* Solo se activa el contorno dorado */
+    color: #000000;            /* El texto de la hora se queda negro */
+    padding: 13px;             /* Compensa el píxel extra de borde */
+}
+
+/* ==========================================================================
+   8. Formularios de Entrada (Fecha y Datos de Contacto)
+   ========================================================================== */
+.date-picker-container, .client-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 20px 0;
+}
+
+.date-picker-container label, .client-info-container label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #262626;
+}
+
 input[type="date"], input[type="text"], input[type="tel"] {
-    background-color: #242424;
-    border: 2px solid #333;
-    color: #fff;
+    background-color: #fafafa;
+    border: 1px solid #dbdbdb;
+    color: #000000;
     padding: 12px;
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     outline: none;
+    font-family: inherit;
 }
 
 input:focus {
-    border-color: #d4af37;
+    border-color: #a8a8a8; /* Se oscurece sutilmente el borde al escribir */
+    background-color: #ffffff;
 }
 
-/* Botones de Navegación */
+/* 9. Botones de Navegación del Sistema (Atrás, Siguiente, Confirmar) */
 .action-container {
-    margin-top: 25px;
-    text-align: right;
+    margin-top: 30px;
 }
 
 .navigation-buttons {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
 }
 
 button {
-    padding: 12px 28px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 8px;
     cursor: pointer;
     border: none;
-    transition: background 0.2s;
+    font-family: inherit;
+    transition: background-color 0.1s ease;
 }
 
+/* Botones Siguiente y Confirmar (Negro Sólido Estilo Fuerte) */
 .btn-next, .btn-confirmar {
-    background-color: #d4af37;
-    color: #121212;
+    background-color: #000000;
+    color: #ffffff;
+    flex-grow: 1;
 }
 
 .btn-next:hover, .btn-confirmar:hover {
-    background-color: #f3c63f;
+    background-color: #262626;
 }
 
+/* Botón Atrás (Blanco con Borde Fino) */
 .btn-prev {
-    background-color: #444;
-    color: #fff;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #dbdbdb;
 }
 
 .btn-prev:hover {
-    background-color: #555;
+    background-color: #fafafa;
+    border-color: #a8a8a8;
 }
 
+/* 10. Pie de Página */
 footer {
     text-align: center;
-    padding: 20px;
-    color: #666;
-    font-size: 0.9rem;
+    padding: 40px 20px;
+    color: #c7c7c7;
+    font-size: 0.8rem;
 }

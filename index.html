@@ -10,27 +10,26 @@
 
     <header>
         <h1>Reserva tu Turno</h1>
-        <p>Elegí tu barbero y horario en simples pasos</p>
     </header>
 
     <main class="container">
         <section id="step-1" class="booking-section active">
-            <h2>1. Selecciona tu Barbero</h2>
+            <h2>Selecciona tu Barbero</h2>
             <div class="cards-grid">
                 <label class="card-option">
                     <input type="radio" name="barber" value="Marcos">
                     <div class="card-content">
-                        <div class="avatar">M</div>
+                        <img src="rigby.jpg" alt="Marcos" class="avatar">
                         <h3>Marcos</h3>
-                        <p>Degradados y Barba</p>
+                        <p>------</p>
                     </div>
                 </label>
                 <label class="card-option">
                     <input type="radio" name="barber" value="Franco">
                     <div class="card-content">
-                        <div class="avatar">F</div>
+                        <img src="timi_torner.jpg" alt="Franco" class="avatar">
                         <h3>Franco</h3>
-                        <p>Cortes Clásicos</p>
+                        <p>------</p>
                     </div>
                 </label>
             </div>
@@ -40,7 +39,45 @@
         </section>
 
         <section id="step-2" class="booking-section">
-            <h2>2. Fecha y Horario</h2>
+            <h2>Selecciona el Servicio</h2>
+            <div class="services-list">
+                <label class="service-option">
+                    <input type="radio" name="service" value="Corte ($1200)">
+                    <div class="service-content">
+                        <span class="service-name">Corte de Pelo</span>
+                        <span class="service-price">$1200</span>
+                    </div>
+                </label>
+                <label class="service-option">
+                    <input type="radio" name="service" value="Barba ($800)">
+                    <div class="service-content">
+                        <span class="service-name">Perfilado / Afeitado de Barba</span>
+                        <span class="service-price">$800</span>
+                    </div>
+                </label>
+                <label class="service-option">
+                    <input type="radio" name="service" value="Mechas ($2000)">
+                    <div class="service-content">
+                        <span class="service-name">Mechas / Reflejos</span>
+                        <span class="service-price">$2000</span>
+                    </div>
+                </label>
+                <label class="service-option">
+                    <input type="radio" name="service" value="Global ($3500)">
+                    <div class="service-content">
+                        <span class="service-name">Color Global / Tintura completo</span>
+                        <span class="service-price">$3500</span>
+                    </div>
+                </label>
+            </div>
+            <div class="action-container navigation-buttons">
+                <button class="btn-prev" onclick="prevStep(1)">Atrás</button>
+                <button class="btn-next" onclick="nextStep(3)">Siguiente</button>
+            </div>
+        </section>
+
+        <section id="step-3" class="booking-section">
+            <h2>Fecha y Horario</h2>
             
             <div class="date-picker-container">
                 <label for="appointment-date">Elegí el día:</label>
@@ -66,13 +103,13 @@
                 </label>
             </div>
             <div class="action-container navigation-buttons">
-                <button class="btn-prev" onclick="prevStep(1)">Atrás</button>
-                <button class="btn-next" onclick="nextStep(3)">Siguiente</button>
+                <button class="btn-prev" onclick="prevStep(2)">Atrás</button>
+                <button class="btn-next" onclick="nextStep(4)">Siguiente</button>
             </div>
         </section>
 
-        <section id="step-3" class="booking-section">
-            <h2>3. Pago y Contacto</h2>
+        <section id="step-4" class="booking-section">
+            <h2>Pago y Contacto</h2>
             
             <div class="payment-options">
                 <label class="payment-card">
@@ -100,8 +137,8 @@
             </div>
 
             <div class="action-container navigation-buttons">
-                <button class="btn-prev" onclick="prevStep(2)">Atrás</button>
-                <button class="btn-confirmar" onclick="confirmarTurno()">Confirmar Turno 📱</button>
+                <button class="btn-prev" onclick="prevStep(3)">Atrás</button>
+                <button class="btn-confirmar" onclick="confirmarTurno()">Confirmar Turno </button>
             </div>
         </section>
     </main>
