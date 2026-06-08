@@ -9,27 +9,31 @@
 <body>
 
     <header>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
         <h1>Reserva tu Turno</h1>
+        <p>Elegí tus opciones en simples pasos</p>
     </header>
 
     <main class="container">
-        <section id="step-1" class="booking-section active">
-            <h2>Selecciona tu Barbero</h2>
+        <section id="step-1" class="booking-section active fade-in">
+            <h2>1. Selecciona tu Barbero</h2>
             <div class="cards-grid">
                 <label class="card-option">
                     <input type="radio" name="barber" value="Marcos">
                     <div class="card-content">
-                        <img src="rigby.jpg" alt="Marcos" class="avatar">
+                        <img src="marcos.jpg" alt="Marcos" class="avatar">
                         <h3>Marcos</h3>
-                        <p>------</p>
+                        <p>Degradados y Barba</p>
                     </div>
                 </label>
                 <label class="card-option">
                     <input type="radio" name="barber" value="Franco">
                     <div class="card-content">
-                        <img src="timi_torner.jpg" alt="Franco" class="avatar">
+                        <img src="franco.jpg" alt="Franco" class="avatar">
                         <h3>Franco</h3>
-                        <p>------</p>
+                        <p>Cortes Clásicos</p>
                     </div>
                 </label>
             </div>
@@ -38,35 +42,47 @@
             </div>
         </section>
 
-        <section id="step-2" class="booking-section">
-            <h2>Selecciona el Servicio</h2>
+        <section id="step-2" class="booking-section fade-in">
+            <h2>2. Selecciona el Servicio</h2>
             <div class="services-list">
                 <label class="service-option">
-                    <input type="radio" name="service" value="Corte ($1200)">
+                    <input type="radio" name="service" value="Corte de Pelo" data-price="$12000,00" data-duration="1 h">
                     <div class="service-content">
-                        <span class="service-name">Corte de Pelo</span>
-                        <span class="service-price">$1200</span>
+                        <div>
+                            <span class="service-name">Corte de Pelo</span>
+                            <small class="service-duration">Duración: 1 h</small>
+                        </div>
+                        <span class="service-price">$12000,00</span>
                     </div>
                 </label>
                 <label class="service-option">
-                    <input type="radio" name="service" value="Barba ($800)">
+                    <input type="radio" name="service" value="Barba" data-price="$10000,00" data-duration="30 min">
                     <div class="service-content">
-                        <span class="service-name">Perfilado / Afeitado de Barba</span>
-                        <span class="service-price">$800</span>
+                        <div>
+                            <span class="service-name">Barba</span>
+                            <small class="service-duration">Duración: 30 min</small>
+                        </div>
+                        <span class="service-price">$10000,00</span>
                     </div>
                 </label>
                 <label class="service-option">
-                    <input type="radio" name="service" value="Mechas ($2000)">
+                    <input type="radio" name="service" value="Corte y Barba" data-price="$18000,00" data-duration="30 min">
                     <div class="service-content">
-                        <span class="service-name">Mechas / Reflejos</span>
-                        <span class="service-price">$2000</span>
+                        <div>
+                            <span class="service-name">Corte y Barba</span>
+                            <small class="service-duration">Duración: 30 min</small>
+                        </div>
+                        <span class="service-price">$18000,00</span>
                     </div>
                 </label>
                 <label class="service-option">
-                    <input type="radio" name="service" value="Global ($3500)">
+                    <input type="radio" name="service" value="Mechas" data-price="$55000,00" data-duration="30 min">
                     <div class="service-content">
-                        <span class="service-name">Color Global / Tintura completo</span>
-                        <span class="service-price">$3500</span>
+                        <div>
+                            <span class="service-name">Mechas (3 días de anticipación)</span>
+                            <small class="service-duration">Duración: 30 min</small>
+                        </div>
+                        <span class="service-price">$55000,00</span>
                     </div>
                 </label>
             </div>
@@ -76,41 +92,24 @@
             </div>
         </section>
 
-        <section id="step-3" class="booking-section">
-            <h2>Fecha y Horario</h2>
-            
+        <section id="step-3" class="booking-section fade-in">
+            <h2>3. Fecha y Horario</h2>
             <div class="date-picker-container">
-                <label for="appointment-date">Elegí el día:</label>
+                <label for="appointment-date">Elegí el día (Lunes a Sábado):</label>
                 <input type="date" id="appointment-date" name="appointment-date">
             </div>
 
-            <div class="time-grid">
-                <label class="time-option">
-                    <input type="radio" name="time" value="09:00">
-                    <span>09:00 AM</span>
-                </label>
-                <label class="time-option">
-                    <input type="radio" name="time" value="10:00">
-                    <span>10:00 AM</span>
-                </label>
-                <label class="time-option">
-                    <input type="radio" name="time" value="16:00">
-                    <span>16:00 PM</span>
-                </label>
-                <label class="time-option">
-                    <input type="radio" name="time" value="17:00">
-                    <span>17:00 PM</span>
-                </label>
-            </div>
+            <div class="time-grid" id="time-slots-container">
+                </div>
+
             <div class="action-container navigation-buttons">
                 <button class="btn-prev" onclick="prevStep(2)">Atrás</button>
                 <button class="btn-next" onclick="nextStep(4)">Siguiente</button>
             </div>
         </section>
 
-        <section id="step-4" class="booking-section">
-            <h2>Pago y Contacto</h2>
-            
+        <section id="step-4" class="booking-section fade-in">
+            <h2>4. Pago y Contacto</h2>
             <div class="payment-options">
                 <label class="payment-card">
                     <input type="radio" name="payment" value="Efectivo">
@@ -123,7 +122,7 @@
                     <input type="radio" name="payment" value="Mercado Pago">
                     <div class="card-content">
                         <h3>Mercado Pago</h3>
-                        <p>Transferencia / Tarjeta</p>
+                        <p>Transferencia</p>
                     </div>
                 </label>
             </div>
@@ -138,13 +137,35 @@
 
             <div class="action-container navigation-buttons">
                 <button class="btn-prev" onclick="prevStep(3)">Atrás</button>
-                <button class="btn-confirmar" onclick="confirmarTurno()">Confirmar Turno </button>
+                <button class="btn-confirmar" onclick="confirmarTurno()">Confirmar Turno 📱</button>
+            </div>
+        </section>
+
+        <section id="step-5" class="booking-section fade-in">
+            <div class="ticket-container">
+                <div class="ticket-header">
+                    <div class="ticket-icon">✓</div>
+                    <h2>¡Turno Reservado!</h2>
+                    <p>Presentá este ticket al llegar al local</p>
+                </div>
+                <div class="ticket-body">
+                    <div class="ticket-row"><span>Cliente:</span> <strong id="tk-cliente"></strong></div>
+                    <div class="ticket-row"><span>Barbero:</span> <strong id="tk-barbero"></strong></div>
+                    <div class="ticket-row"><span>Servicio:</span> <strong id="tk-servicio"></strong></div>
+                    <div class="ticket-row"><span>Fecha:</span> <strong id="tk-fecha"></strong></div>
+                    <div class="ticket-row"><span>Horario:</span> <strong id="tk-hora"></strong></div>
+                    <div class="ticket-row"><span>Método Pago:</span> <strong id="tk-pago"></strong></div>
+                    <div class="ticket-total"><span>Total a pagar:</span> <span id="tk-total"></span></div>
+                </div>
+                <div class="ticket-footer">
+                    <button class="btn-whatsapp-send" onclick="enviarMensajeWhatsApp()">Enviar Comprobante por WhatsApp 📱</button>
+                </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>¿Consultas? Escribinos directamente al +54 9 388 XXX-XXXX</p>
+        <p> Barbería Premium - San Salvador de Jujuy </p>
     </footer>
 
     <script src="script.js"></script>

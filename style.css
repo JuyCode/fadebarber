@@ -1,11 +1,10 @@
 /* ==========================================================================
-   PALETA INSTAGRAM PREMIUM + DETALLES DORADOS MINIMALISTAS (COMPLETO)
+   SISTEMA DE TURNOS PREMIUM - COMPLETO CON EFECTOS Y TICKET 🌟
    ========================================================================== */
 
-/* 1. Estilos Generales y Base */
 body {
-    background-color: #ffffff; /* Fondo blanco puro */
-    color: #000000; /* Texto negro puro para máximo contraste */
+    background-color: #ffffff;
+    color: #000000;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -13,51 +12,73 @@ body {
 
 header {
     text-align: center;
-    padding: 45px 20px 25px 20px;
+    padding: 40px 20px 25px 20px;
     background-color: #ffffff;
+    position: relative;
 }
 
 header h1 {
-    color: #000000;
-    margin: 0 0 6px 0;
+    margin: 15px 0 6px 0;
     font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: -0.5px;
 }
 
 header p {
-    color: #737373; /* Gris clásico de subtítulos de Instagram */
+    color: #737373;
     margin: 0;
     font-size: 0.95rem;
 }
 
+/* BARRA DE PROGRESO ANIMADA */
+.progress-container {
+    width: 100%;
+    height: 4px;
+    background-color: #f0f0f0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 25%; /* Cambia por JS */
+    background-color: #d4af37; /* Color Dorado */
+    transition: width 0.3s ease-in-out;
+}
+
 .container {
-    max-width: 500px; /* Ancho ideal para pantallas de celular */
+    max-width: 500px;
     margin: 0 auto;
     padding: 20px 16px;
 }
 
-/* 2. Secciones del Proceso (Pasos controlados por JS) */
+/* SECCIONES Y ANIMACIONES (Fade In) */
 .booking-section {
-    display: none; /* Ocultas por defecto */
-    background-color: #ffffff;
-    margin-bottom: 20px;
+    display: none;
 }
 
 .booking-section.active {
-    display: block; /* Solo se muestra la sección activa */
+    display: block;
+}
+
+.fade-in {
+    animation: fadeInEffect 0.4s ease-out;
+}
+
+@keyframes fadeInEffect {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .booking-section h2 {
-    color: #000000;
     margin-top: 0;
     margin-bottom: 24px;
     font-size: 1.25rem;
     font-weight: 700;
-    letter-spacing: -0.2px;
 }
 
-/* 3. Grillas de Opciones (Estructura de Bloques) */
+/* GRILLAS Y LAYOUTS */
 .cards-grid, .payment-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -72,54 +93,33 @@ header p {
     margin: 20px 0;
 }
 
-/* Ocultar los botones de opción nativos (los círculos para marcar) */
 .card-option input, .time-option input, .payment-card input, .service-option input {
     display: none;
 }
 
-/* 4. Tarjetas Base (Barberos y Pagos) antes de ser seleccionadas */
+/* CONTENIDOS DE TARJETAS */
 .card-content {
     display: block;
     padding: 24px 12px;
-    background-color: #fafafa; /* Gris ultra claro de fondo (estilo Instagram) */
-    border: 1px solid #dbdbdb;  /* Borde fino y sutil */
+    background-color: #fafafa;
+    border: 1px solid #dbdbdb;
     border-radius: 8px;
     cursor: pointer;
     text-align: center;
     transition: all 0.15s ease-out;
 }
 
-/* Logos/Avatares Circulares con Inicial de los Barberos */
 .avatar {
     width: 72px;
     height: 72px;
-    background-color: #1a1a1a; 
-    color: #ffffff;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 600;
     margin: 0 auto 14px auto;
-    border: 2px solid #d4af37; /* Borde dorado alrededor de la inicial */
+    border: 2px solid #d4af37;
     box-shadow: 0 0 8px rgba(212, 175, 55, 0.15);
+    object-fit: cover;
 }
 
-.card-content h3 {
-    margin: 0 0 4px 0;
-    color: #000000;
-    font-size: 1.05rem;
-    font-weight: 600;
-}
-
-.card-content p {
-    margin: 0;
-    font-size: 0.8rem;
-    color: #737373;
-}
-
-/* 5. Estructura de la Lista de Servicios (Paso 2) */
+/* LISTA DE SERVICIOS ESTILO APP */
 .services-list {
     display: flex;
     flex-direction: column;
@@ -129,7 +129,7 @@ header p {
 
 .service-content {
     display: flex;
-    justify-content: space-between; /* Nombre a la izquierda, precio a la derecha */
+    justify-content: space-between;
     align-items: center;
     padding: 18px 16px;
     background-color: #fafafa;
@@ -139,19 +139,21 @@ header p {
     transition: all 0.15s ease-out;
 }
 
-.service-name {
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #000000;
+.service-content div {
+    display: flex;
+    flex-direction: column;
 }
 
-.service-price {
-    font-weight: 700;
-    font-size: 1rem;
-    color: #000000;
+.service-duration {
+    font-size: 0.75rem;
+    color: #737373;
+    margin-top: 3px;
 }
 
-/* 6. Botones de Horarios Base antes de ser seleccionados */
+.service-name { font-weight: 600; font-size: 0.95rem; }
+.service-price { font-weight: 700; font-size: 1rem; }
+
+/* HORARIOS */
 .time-option span {
     display: block;
     padding: 14px;
@@ -163,58 +165,34 @@ header p {
     font-weight: 600;
     font-size: 0.9rem;
     color: #262626;
-    transition: all 0.15s ease-out;
+}
+
+/* HORARIOS DESHABILITADOS (Para el Domingo/Ocupados) */
+.time-option.disabled span {
+    background-color: #f3f3f3;
+    border-color: #e2e2e2;
+    color: #b0b0b0;
+    cursor: not-allowed;
+    text-decoration: line-through;
 }
 
 /* ==========================================================================
-   7. ESTADOS SELECCIONADOS (Únicamente Borde Dorado Fino y Limpio) 🌟
+   ESTADOS SELECCIONADOS (Bordes Dorados Finitos)
    ========================================================================== */
-
-/* Selección de Barberos y Métodos de Pago */
 .card-option input:checked + .card-content,
-.payment-card input:checked + .card-content {
-    background-color: #ffffff; /* Mantiene fondo blanco */
-    border: 2px solid #d4af37; /* Solo se activa el contorno dorado */
-    padding-top: 23px;         /* Compensa el píxel extra de borde */
-    padding-bottom: 23px;
-}
-
-/* Selección de Servicios */
-.service-option input:checked + .service-content {
-    background-color: #ffffff; /* Mantiene fondo blanco */
-    border: 2px solid #d4af37; /* Solo se activa el contorno dorado */
-    padding-top: 17px;         /* Compensa el píxel extra de borde */
-    padding-bottom: 17px;
-}
-
-/* Mantiene el texto de los servicios en negro puro al seleccionarse */
-.service-option input:checked + .service-content .service-name,
-.service-option input:checked + .service-content .service-price {
-    color: #000000; 
-}
-
-/* Selección de Horarios */
+.payment-card input:checked + .card-content,
+.service-option input:checked + .service-content,
 .time-option input:checked + span {
-    background-color: #ffffff; /* Mantiene fondo blanco */
-    border: 2px solid #d4af37; /* Solo se activa el contorno dorado */
-    color: #000000;            /* El texto de la hora se queda negro */
-    padding: 13px;             /* Compensa el píxel extra de borde */
+    background-color: #ffffff;
+    border: 2px solid #d4af37 !important;
 }
 
-/* ==========================================================================
-   8. Formularios de Entrada (Fecha y Datos de Contacto)
-   ========================================================================== */
+/* FORMULARIOS */
 .date-picker-container, .client-info-container {
     display: flex;
     flex-direction: column;
     gap: 6px;
     margin: 20px 0;
-}
-
-.date-picker-container label, .client-info-container label {
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: #262626;
 }
 
 input[type="date"], input[type="text"], input[type="tel"] {
@@ -225,24 +203,11 @@ input[type="date"], input[type="text"], input[type="tel"] {
     border-radius: 6px;
     font-size: 0.95rem;
     outline: none;
-    font-family: inherit;
 }
 
-input:focus {
-    border-color: #a8a8a8; /* Se oscurece sutilmente el borde al escribir */
-    background-color: #ffffff;
-}
-
-/* 9. Botones de Navegación del Sistema (Atrás, Siguiente, Confirmar) */
-.action-container {
-    margin-top: 30px;
-}
-
-.navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
+/* BOTONES DE NAVEGACIÓN */
+.action-container { margin-top: 30px; }
+.navigation-buttons { display: flex; justify-content: space-between; gap: 10px; }
 
 button {
     padding: 12px 24px;
@@ -251,37 +216,80 @@ button {
     border-radius: 8px;
     cursor: pointer;
     border: none;
-    font-family: inherit;
-    transition: background-color 0.1s ease;
 }
 
-/* Botones Siguiente y Confirmar (Negro Sólido Estilo Fuerte) */
-.btn-next, .btn-confirmar {
+.btn-next, .btn-confirmar, .btn-whatsapp-send {
     background-color: #000000;
     color: #ffffff;
     flex-grow: 1;
 }
 
-.btn-next:hover, .btn-confirmar:hover {
-    background-color: #262626;
-}
-
-/* Botón Atrás (Blanco con Borde Fino) */
 .btn-prev {
     background-color: #ffffff;
     color: #000000;
     border: 1px solid #dbdbdb;
 }
 
-.btn-prev:hover {
+/* ESTILO DEL TICKET DIGITAL (PASO 5) 🎫 */
+.ticket-container {
     background-color: #fafafa;
-    border-color: #a8a8a8;
+    border: 1px dashed #d4af37;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* 10. Pie de Página */
-footer {
+.ticket-header {
     text-align: center;
-    padding: 40px 20px;
-    color: #c7c7c7;
-    font-size: 0.8rem;
+    border-bottom: 1px dashed #dbdbdb;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
 }
+
+.ticket-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #d4af37;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin: 0 auto 10px auto;
+}
+
+.ticket-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ticket-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.ticket-row span { color: #737373; }
+
+.ticket-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-top: 1px dashed #dbdbdb;
+    padding-top: 14px;
+    margin-top: 10px;
+    color: #b59226;
+}
+
+.btn-whatsapp-send {
+    width: 100%;
+    background-color: #25d366; /* Verde WhatsApp */
+    padding: 14px;
+    font-size: 1rem;
+    margin-top: 15px;
+}
+
+footer { text-align: center; padding: 40px 20px; color: #c7c7c7; font-size: 0.8rem; }
