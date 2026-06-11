@@ -38,7 +38,7 @@ function generarHorariosDinamicos() {
 
     // Simulamos listas de horarios distintos para demostrar dinamismo
     let horasDisponibles = [];
-    if (barbero === "Marcos") {
+    if (barbero === "Nico") {
         horasDisponibles = ["10:00", "11:00", "12:00","13:00", "17:00", "18:00", "19:00"," 20:00", "21:00"];
     } else {
         horasDisponibles = ["10:30", "12:00", "13:00", "15:00", "17:00", "19:00", "21:00"];
@@ -139,9 +139,9 @@ function enviarMensajeWhatsApp() {
 
     // Evaluamos a quién eligió el cliente y le asignamos su WhatsApp real
     if (turnoRegistrado.barbero === "Nico") {
-        numeroDestino = "5493884418917"; // <-- Pone acá el número real de Marcos
+        numeroDestino = "5493885706742"; // <-- Pone acá el número real de Marcos
     } else if (turnoRegistrado.barbero === "Tito") {
-        numeroDestino = "5493884418917"; // <-- Pone acá el número real de Tito
+        numeroDestino = "5493884031208"; // <-- Pone acá el número real de Tito
     } else {
         // Por si las dudas agregás más barberos a futuro, un número general del local
         numeroDestino = "549388ZZZZZZZ"; 
