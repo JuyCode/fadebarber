@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barbería - Reserva de Turnos</title>
+    <title>Fade Barber</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,17 +23,17 @@
                 <label class="card-option">
                     <input type="radio" name="barber" value="Marcos">
                     <div class="card-content">
-                        <img src="marcos.jpg" alt="Marcos" class="avatar">
-                        <h3>Marcos</h3>
-                        <p>Degradados y Barba</p>
+                        <img src="timi_torner.jpg" alt="Marcos" class="avatar">
+                        <h3>Nico</h3>
+                        <p>------</p>
                     </div>
                 </label>
                 <label class="card-option">
                     <input type="radio" name="barber" value="Franco">
                     <div class="card-content">
                         <img src="franco.jpg" alt="Franco" class="avatar">
-                        <h3>Franco</h3>
-                        <p>Cortes Clásicos</p>
+                        <h3>Tito</h3>
+                        <p>------</p>
                     </div>
                 </label>
             </div>
@@ -50,9 +50,9 @@
                     <div class="service-content">
                         <div>
                             <span class="service-name">Corte de Pelo</span>
-                            <small class="service-duration">Duración: 1 h</small>
+                            <small class="service-duration">Incluye perfilado de cejas y diseño a eleccion</small>
                         </div>
-                        <span class="service-price">$12000,00</span>
+                        <span class="service-price">$9.000</span>
                     </div>
                 </label>
                 <label class="service-option">
@@ -60,9 +60,8 @@
                     <div class="service-content">
                         <div>
                             <span class="service-name">Barba</span>
-                            <small class="service-duration">Duración: 30 min</small>
                         </div>
-                        <span class="service-price">$10000,00</span>
+                        <span class="service-price">$1500</span>
                     </div>
                 </label>
                 <label class="service-option">
@@ -70,19 +69,9 @@
                     <div class="service-content">
                         <div>
                             <span class="service-name">Corte y Barba</span>
-                            <small class="service-duration">Duración: 30 min</small>
+                            
                         </div>
-                        <span class="service-price">$18000,00</span>
-                    </div>
-                </label>
-                <label class="service-option">
-                    <input type="radio" name="service" value="Mechas" data-price="$55000,00" data-duration="30 min">
-                    <div class="service-content">
-                        <div>
-                            <span class="service-name">Mechas (3 días de anticipación)</span>
-                            <small class="service-duration">Duración: 30 min</small>
-                        </div>
-                        <span class="service-price">$55000,00</span>
+                        <span class="service-price">$10.000</span>
                     </div>
                 </label>
             </div>
@@ -129,15 +118,15 @@
 
             <div class="client-info-container">
                 <label for="client-name">Tu Nombre:</label>
-                <input type="text" id="client-name" placeholder="Ej: Luis Catorcino" required>
+                <input type="text" id="client-name" placeholder="Ej: Leonel Messi" required>
 
                 <label for="client-phone">Tu número de WhatsApp:</label>
-                <input type="tel" id="client-phone" placeholder="Ej: 3884XXXXXX" required>
+                <input type="tel" id="client-phone" placeholder="Ej: 388XXXXXXX" required>
             </div>
 
             <div class="action-container navigation-buttons">
                 <button class="btn-prev" onclick="prevStep(3)">Atrás</button>
-                <button class="btn-confirmar" onclick="confirmarTurno()">Confirmar Turno 📱</button>
+                <button class="btn-confirmar" onclick="confirmarTurno()">Confirmar Turno </button>
             </div>
         </section>
 
@@ -158,14 +147,14 @@
                     <div class="ticket-total"><span>Total a pagar:</span> <span id="tk-total"></span></div>
                 </div>
                 <div class="ticket-footer">
-                    <button class="btn-whatsapp-send" onclick="enviarMensajeWhatsApp()">Enviar Comprobante por WhatsApp 📱</button>
+                    <button class="btn-whatsapp-send" onclick="enviarMensajeWhatsApp()">Enviar Comprobante por WhatsApp </button>
                 </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <p> Barbería Premium - San Salvador de Jujuy </p>
+        <p> Barberia - San Salvador de Jujuy </p>
     </footer>
 
     <script src="script.js"></script>
