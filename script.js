@@ -38,7 +38,7 @@ function generarHorariosDinamicos() {
 
     // Simulamos listas de horarios distintos para demostrar dinamismo
     let horasDisponibles = [];
-    if (barbero === "Nico") {
+    if (barbero === "Nico" || barbero === "Tito") {
         horasDisponibles = ["10:00", "11:00", "12:00","13:00", "17:00", "18:00", "19:00"," 20:00", "21:00"];
     } else {
         horasDisponibles = ["10:30", "12:00", "13:00", "15:00", "17:00", "19:00", "21:00"];
@@ -147,16 +147,13 @@ function enviarMensajeWhatsApp() {
         numeroDestino = "549388ZZZZZZZ"; 
     }
 
-    // Estructuramos el mensaje automático para el chat
-    const mensaje = `¡Hola! Confirmo mi reserva desde la web:%0A%0A` +
-                    `🎫 *TICKET DE TURNO*%0A` +
-                    `👤 *Cliente:* ${turnoRegistrado.cliente}%0A` +
-                    `💈 *Barbero:* ${turnoRegistrado.barbero}%0A` +
-                    `✂️ *Servicio:* ${turnoRegistrado.servicio}%0A` +
-                    `📅 *Fecha:* ${turnoRegistrado.fecha}%0A` +
-                    `⏰ *Hora:* ${turnoRegistrado.hora} hs%0A` +
-                    `💳 *Pago:* ${turnoRegistrado.pago}%0A` +
-                    `💰 *Total:* ${turnoRegistrado.precio}`;
+    // PLANTILLA: Redactamos el mensaje tal cual tu captura de pantalla
+    // Usamos %0A para los saltos de línea y los asteriscos * para las negritas de WhatsApp
+    const mensaje = `*Plantilla para el Cliente:*%0A` +
+                    `"¡Hola, *${turnoRegistrado.cliente}*! Tu turno en la barbería está confirmado para el día *${turnoRegistrado.fecha}* a las *${turnoRegistrado.hora}* hs con el barbero *${turnoRegistrado.barbero}*. ¡Te esperamos!"%0A%0A` +
+                    `-----------------------------%0A%0A` +
+                    `*Plantilla para el Barbero:*%0A` +
+                    `"Hola, *${turnoRegistrado.barbero}*. Tenés un nuevo turno agendado. Cliente: *${turnoRegistrado.cliente}*. Día: *${turnoRegistrado.fecha}* a las *${turnoRegistrado.hora}* hs. Pago: *${turnoRegistrado.pago}* (${turnoRegistrado.precio})".`;
 
     // Creamos la URL apuntando dinámicamente al número del barbero elegido
     const urlWhatsApp = `https://wa.me/${numeroDestino}?text=${mensaje}`;
