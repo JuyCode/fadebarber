@@ -132,32 +132,48 @@ function confirmarTurno() {
     document.getElementById('step-5').classList.add('active');
 }
 
-// 5. DISPARAR WHATSAPP DIRECCIONADO AL BARBERO SELECCIONADO 📱
+// 5. ENVIAR DATOS DE FONDO AL CHATBOT PROPIO 🤖
 function enviarMensajeWhatsApp() {
-    // Definimos una variable vacía para el número
-    let numeroDestino = ""; 
-
-    // Evaluamos a quién eligió el cliente y le asignamos su WhatsApp real
+    // Definimos los números reales de los barberos (reemplazá con los reales si querés)
+    let numeroBarbero = "";
     if (turnoRegistrado.barbero === "Nico") {
-        numeroDestino = "5493885706742"; // <-- Pone acá el número real de Marcos
-    } else if (turnoRegistrado.barbero === "Tito") {
-        numeroDestino = "5493884031208"; // <-- Pone acá el número real de Tito
+        numeroBarbero = "5493885706742"; 
     } else {
-        // Por si las dudas agregás más barberos a futuro, un número general del local
-        numeroDestino = "549388ZZZZZZZ"; 
+        numeroBarbero = "5493884031208"; 
     }
 
-    // PLANTILLA: Redactamos el mensaje tal cual tu captura de pantalla
-    // Usamos %0A para los saltos de línea y los asteriscos * para las negritas de WhatsApp
-    const mensaje = `*Plantilla para el Cliente:*%0A` +
-                    `"¡Hola, *${turnoRegistrado.cliente}*! Tu turno en la barbería está confirmado para el día *${turnoRegistrado.fecha}* a las *${turnoRegistrado.hora}* hs con el barbero *${turnoRegistrado.barbero}*. ¡Te esperamos!"%0A%0A` +
-                    `-----------------------------%0A%0A` +
-                    `*Plantilla para el Barbero:*%0A` +
-                    `"Hola, *${turnoRegistrado.barbero}*. Tenés un nuevo turno agendado. Cliente: *${turnoRegistrado.cliente}*. Día: *${turnoRegistrado.fecha}* a las *${turnoRegistrado.hora}* hs. Pago: *${turnoRegistrado.pago}* (${turnoRegistrado.precio})".`;
+    // Armamos el paquete de datos para el servidor local
+    const datosParaElBot = {
+        cliente: turnoRegistrado.cliente,
+        barbero: turnoRegistrado.barbero,
+        servicio: turnoRegistrado.servicio,
+        fecha: turnoRegistrado.fecha,
+        hora: turnoRegistrado.hora,
+        pago: turnoRegistrado.pago,
+        precio: turnoRegistrado.precio,
+        whatsapp_cliente: turnoRegistrado.telefono, // Número que cargó el cliente en el formulario
+        whatsapp_barbero: numeroBarbero       // Número del barbero que definimos arriba
+    };
 
-    // Creamos la URL apuntando dinámicamente al número del barbero elegido
-    const urlWhatsApp = `https://wa.me/${numeroDestino}?text=${mensaje}`;
-    
-    // Abrimos el chat correspondiente
-    window.open(urlWhatsApp, '_blank');
+    // Le pegamos a tu servidor de Node.js que está corriendo en el puerto 3000
+    fetch('http://localhost:3000/api/nuevo-turno', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(datosParaElBot)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`¡Turno confirmado de forma automática! El bot ya despachó los WhatsApps de confirmación.`);
+            location.reload(); // Reinicia la página para el próximo cliente
+        } else {
+            alert("El bot recibió los datos pero no pudo enviar el mensaje. Revisá que el celular del bot tenga internet.");
+        }
+    })
+    .catch(error => {
+        console.error("Error al conectar con el bot:", error);
+        alert("No se pudo conectar con el Chatbot. Asegurate de tener la terminal de Git Bash abierta corriendo el servidor.");
+    });
 }
