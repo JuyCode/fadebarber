@@ -31,25 +31,51 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // 2. HORARIOS DINÁMICOS EN BASE AL BARBERO
+// 2. HORARIOS DINÁMICOS EN BASE AL BARBERO Y TURNOS OCUPADOS
+// 2. HORARIOS DINÁMICOS EN BASE AL BARBERO Y TURNOS OCUPADOS
 function generarHorariosDinamicos() {
     const barbero = document.querySelector('input[name="barber"]:checked').value;
     const container = document.getElementById('time-slots-container');
     container.innerHTML = ""; // Limpiamos
 
+    // 1. Definimos la grilla de horarios del local según el barbero
     let horasDisponibles = [];
     if (barbero === "Nico" || barbero === "Tito") {
-        horasDisponibles = ["10:00", "11:00", "12:00","13:00", "17:00", "18:00", "19:00","20:00", "21:00"];
+        horasDisponibles = ["10:00", "11:00", "12:00", "13:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
     } else {
         horasDisponibles = ["10:30", "12:00", "13:00", "15:00", "17:00", "19:00", "21:00"];
     }
 
+    // 2. SIMULACIÓN DE TURNOS OCUPADOS (Mañana vendrá de la base de datos)
+    let turnosOcupados = []; 
+    if (barbero === "Nico") {
+        turnosOcupados = ["12:00", "18:00"]; 
+    }
+    if (barbero === "Tito") {
+        turnosOcupados = ["17:00"];
+    }
+
+    // 3. Dibujamos los botones en la pantalla
     horasDisponibles.forEach(hora => {
-        container.innerHTML += `
-            <label class="time-option">
-                <input type="radio" name="time" value="${hora}">
-                <span>${hora} hs</span>
-            </label>
-        `;
+        const estaOcupado = turnosOcupados.includes(hora);
+
+        if (estaOcupado) {
+            // Versión limpia: mismo diseño, pero grisado y deshabilitado
+            container.innerHTML += `
+                <label class="time-option" style="background-color: #eaeaea; border-color: #d1d1d1; color: #aaaaaa; cursor: not-allowed; opacity: 0.6;">
+                    <input type="radio" name="time" value="${hora}" disabled>
+                    <span>${hora} hs</span>
+                </label>
+            `;
+        } else {
+            // Botón normal disponible
+            container.innerHTML += `
+                <label class="time-option">
+                    <input type="radio" name="time" value="${hora}">
+                    <span>${hora} hs</span>
+                </label>
+            `;
+        }
     });
 }
 
