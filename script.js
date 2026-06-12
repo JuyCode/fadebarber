@@ -132,9 +132,9 @@ function confirmarTurno() {
     document.getElementById('step-5').classList.add('active');
 }
 
-// 5. ENVIAR DATOS DE FONDO AL CHATBOT PROPIO 🤖
+// 5. ENVIAR DATOS DE FONDO AL CHATBOT PROPIO 🤖 (CONEXIÓN CON NGROK)
 function enviarMensajeWhatsApp() {
-    // Definimos los números reales de los barberos (reemplazá con los reales si querés)
+    // Definimos los números reales de los barberos
     let numeroBarbero = "";
     if (turnoRegistrado.barbero === "Nico") {
         numeroBarbero = "5493885706742"; 
@@ -152,11 +152,11 @@ function enviarMensajeWhatsApp() {
         pago: turnoRegistrado.pago,
         precio: turnoRegistrado.precio,
         whatsapp_cliente: turnoRegistrado.telefono, // Número que cargó el cliente en el formulario
-        whatsapp_barbero: numeroBarbero       // Número del barbero que definimos arriba
+        whatsapp_barbero: numeroBarbero       // Número del barbero asignado arriba
     };
 
-    // Le pegamos a tu servidor de Node.js que está corriendo en el puerto 3000
-    fetch('http://localhost:3000/api/nuevo-turno', {
+    // Petición HTTP al túnel seguro de Ngrok que conecta con tu Node.js local
+    fetch('https://sloppily-acting-recluse.ngrok-free.dev/api/nuevo-turno', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -174,6 +174,6 @@ function enviarMensajeWhatsApp() {
     })
     .catch(error => {
         console.error("Error al conectar con el bot:", error);
-        alert("No se pudo conectar con el Chatbot. Asegurate de tener la terminal de Git Bash abierta corriendo el servidor.");
+        alert("No se pudo conectar con el Chatbot. Asegurate de tener la terminal de Ngrok y la de Node activas de fondo.");
     });
 }
