@@ -156,7 +156,7 @@ function enviarMensajeWhatsApp() {
     };
 
     // Petición HTTP al túnel seguro de Ngrok que conecta con tu Node.js local
-    fetch('https://sloppily-acting-recluse.ngrok-free.dev/api/nuevo-turno', {
+    fetch('https://f924-181-111-205-181.ngrok-free.app/api/nuevo-turno', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
