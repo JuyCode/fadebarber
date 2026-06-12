@@ -1,4 +1,4 @@
-// Variable global para retener la info antes de mandar a WhatsApp
+// Variable global para retener la info antes de mandar a la API
 let turnoRegistrado = {};
 
 // 1. CONTROL DE CALENDARIO: Bloquear días pasados y domingos
@@ -36,10 +36,9 @@ function generarHorariosDinamicos() {
     const container = document.getElementById('time-slots-container');
     container.innerHTML = ""; // Limpiamos
 
-    // Simulamos listas de horarios distintos para demostrar dinamismo
     let horasDisponibles = [];
     if (barbero === "Nico" || barbero === "Tito") {
-        horasDisponibles = ["10:00", "11:00", "12:00","13:00", "17:00", "18:00", "19:00"," 20:00", "21:00"];
+        horasDisponibles = ["10:00", "11:00", "12:00","13:00", "17:00", "18:00", "19:00","20:00", "21:00"];
     } else {
         horasDisponibles = ["10:30", "12:00", "13:00", "15:00", "17:00", "19:00", "21:00"];
     }
@@ -54,7 +53,7 @@ function generarHorariosDinamicos() {
     });
 }
 
-// 3. NAVEGACIÓN Y BARRA DE PROGRESO CONTROLADA
+// 3. NAVEGACIÓN Y BARRA DE PROGRESO
 function nextStep(stepNumber) {
     if (stepNumber === 2) {
         if (!document.querySelector('input[name="barber"]:checked')) {
@@ -74,11 +73,9 @@ function nextStep(stepNumber) {
         }
     }
 
-    // Actualizar barra de progreso (porcentaje visual)
     const progreso = (stepNumber / 4) * 100;
     document.getElementById('progress').style.width = `${progreso}%`;
 
-    // Cambiar de pantalla
     document.querySelectorAll('.booking-section').forEach(s => s.classList.remove('active'));
     document.getElementById(`step-${stepNumber}`).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -93,7 +90,7 @@ function prevStep(stepNumber) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 4. CONFIRMACIÓN Y ARMADO DE TICKET INTERACTIVO (PASO 5)
+// 4. CONFIRMACIÓN DIRECTA Y ENVÍO AL BACKEND EN LA NUBE 🤖
 function confirmarTurno() {
     const barbero = document.querySelector('input[name="barber"]:checked').value;
     const servicioInput = document.querySelector('input[name="service"]:checked');
@@ -110,70 +107,48 @@ function confirmarTurno() {
     const fechaFormateada = fecha.split('-').reverse().join('/');
     const precioServicio = servicioInput.getAttribute('data-price');
 
-    // Guardamos los datos globalmente para usarlos en el botón de envío posterior
-    turnoRegistrado = {
-        cliente: nombre, barbero: barbero, servicio: servicioInput.value,
-        fecha: fechaFormateada, hora: hora, pago: pago.value,
-        telefono: telefonoCliente, precio: precioServicio
+    // Mapeo directo de los números reales de los barberos
+    let numeroBarbero = (barbero === "Nico") ? "5493885706742" : "5493884031208";
+
+    // Armamos el JSON limpio para el nuevo backend
+    const datosTurno = {
+        cliente: nombre,
+        barbero: barbero,
+        servicio: servicioInput.value,
+        fecha: fechaFormateada,
+        hora: hora,
+        pago: pago.value,
+        precio: precioServicio,
+        whatsapp_cliente: telefonoCliente,
+        whatsapp_barbero: numeroBarbero
     };
 
-    // Inyectamos los datos dinámicamente directamente en las etiquetas del Ticket del Paso 5
-    document.getElementById('tk-cliente').innerText = nombre;
-    document.getElementById('tk-barbero').innerText = barbero;
-    document.getElementById('tk-servicio').innerText = servicioInput.value;
-    document.getElementById('tk-fecha').innerText = fechaFormateada;
-    document.getElementById('tk-hora').innerText = hora + " hs";
-    document.getElementById('tk-pago').innerText = pago.value;
-    document.getElementById('tk-total').innerText = precioServicio;
-
-    // Llenamos la barra al 100% y mostramos el Ticket
+    // Actualizamos la barra visual al 100%
     document.getElementById('progress').style.width = "100%";
-    document.querySelectorAll('.booking-section').forEach(s => s.classList.remove('active'));
-    document.getElementById('step-5').classList.add('active');
-}
 
-// 5. ENVIAR DATOS DE FONDO AL CHATBOT PROPIO 🤖 (CONEXIÓN CON NGROK)
-function enviarMensajeWhatsApp() {
-    // Definimos los números reales de los barberos
-    let numeroBarbero = "";
-    if (turnoRegistrado.barbero === "Nico") {
-        numeroBarbero = "5493885706742"; 
-    } else {
-        numeroBarbero = "5493884031208"; 
-    }
-
-    // Armamos el paquete de datos para el servidor local
-    const datosParaElBot = {
-        cliente: turnoRegistrado.cliente,
-        barbero: turnoRegistrado.barbero,
-        servicio: turnoRegistrado.servicio,
-        fecha: turnoRegistrado.fecha,
-        hora: turnoRegistrado.hora,
-        pago: turnoRegistrado.pago,
-        precio: turnoRegistrado.precio,
-        whatsapp_cliente: turnoRegistrado.telefono, // Número que cargó el cliente en el formulario
-        whatsapp_barbero: numeroBarbero       // Número del barbero asignado arriba
-    };
-
-    // Petición HTTP al túnel seguro de Ngrok que conecta con tu Node.js local
-    fetch('https://f924-181-111-205-181.ngrok-free.app/api/nuevo-turno', {
+    // 🚀 PETICIÓN HTTP AL BACKEND DEFINITIVO EN INTERNET
+    // NOTA: Cuando hagas el deploy de tu server.js en Render o Railway,
+    // vas a reemplazar 'http://localhost:3000' por la URL real que te den.
+    fetch('http://localhost:3000/api/nuevo-turno', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(datosParaElBot)
+        body: JSON.stringify(datosTurno)
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(`¡Turno confirmado de forma automática! El bot ya despachó los WhatsApps de confirmación.`);
-            location.reload(); // Reinicia la página para el próximo cliente
+            // Pasamos directo a la pantalla final de éxito limpia
+            document.querySelectorAll('.booking-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('step-5').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-            alert("El bot recibió los datos pero no pudo enviar el mensaje. Revisá que el celular del bot tenga internet.");
+            alert("Hubo un problema al registrar el turno en el sistema. Por favor, reintentá.");
         }
     })
     .catch(error => {
-        console.error("Error al conectar con el bot:", error);
-        alert("No se pudo conectar con el Chatbot. Asegurate de tener la terminal de Ngrok y la de Node activas de fondo.");
+        console.error("Error al conectar con el servidor:", error);
+        alert("No se pudo conectar con el sistema de reservas. Por favor, intentá más tarde.");
     });
 }

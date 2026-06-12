@@ -46,30 +46,29 @@
             <h2>2. Selecciona el Servicio</h2>
             <div class="services-list">
                 <label class="service-option">
-                    <input type="radio" name="service" value="Corte de Pelo" data-price="$12000,00" data-duration="1 h">
+                    <input type="radio" name="service" value="Corte de Pelo" data-price="$9.000" data-duration="1 h">
                     <div class="service-content">
                         <div>
                             <span class="service-name">Corte de Pelo</span>
-                            <small class="service-duration">Incluye perfilado de cejas y diseño a eleccion</small>
+                            <small class="service-duration">Incluye perfilado de cejas y diseño a elección</small>
                         </div>
                         <span class="service-price">$9.000</span>
                     </div>
                 </label>
                 <label class="service-option">
-                    <input type="radio" name="service" value="Barba" data-price="$10000,00" data-duration="30 min">
+                    <input type="radio" name="service" value="Barba" data-price="$1.500" data-duration="30 min">
                     <div class="service-content">
                         <div>
                             <span class="service-name">Barba</span>
                         </div>
-                        <span class="service-price">$1500</span>
+                        <span class="service-price">$1.500</span>
                     </div>
                 </label>
                 <label class="service-option">
-                    <input type="radio" name="service" value="Corte y Barba" data-price="$18000,00" data-duration="30 min">
+                    <input type="radio" name="service" value="Corte y Barba" data-price="$10.000" data-duration="30 min">
                     <div class="service-content">
                         <div>
                             <span class="service-name">Corte y Barba</span>
-                            
                         </div>
                         <span class="service-price">$10.000</span>
                     </div>
@@ -88,8 +87,7 @@
                 <input type="date" id="appointment-date" name="appointment-date">
             </div>
 
-            <div class="time-grid" id="time-slots-container">
-                </div>
+            <div class="time-grid" id="time-slots-container"></div>
 
             <div class="action-container navigation-buttons">
                 <button class="btn-prev" onclick="prevStep(2)">Atrás</button>
@@ -118,7 +116,7 @@
 
             <div class="client-info-container">
                 <label for="client-name">Tu Nombre:</label>
-                <input type="text" id="client-name" placeholder="Ej: Leonel Messi" required>
+                <input type="text" id="client-name" placeholder="Ej: Lionel Messi" required>
 
                 <label for="client-phone">Tu número de WhatsApp:</label>
                 <input type="tel" id="client-phone" placeholder="Ej: 388XXXXXXX" required>
@@ -126,35 +124,27 @@
 
             <div class="action-container navigation-buttons">
                 <button class="btn-prev" onclick="prevStep(3)">Atrás</button>
-                <button class="btn-confirmar" onclick="confirmarTurno()">Confirmar Turno </button>
+                <button class="btn-confirmar" onclick="confirmarTurno()">Confirmar Turno</button>
             </div>
         </section>
 
         <section id="step-5" class="booking-section fade-in">
-            <div class="ticket-container">
-                <div class="ticket-header">
-                    <div class="ticket-icon">✓</div>
-                    <h2>¡Turno Reservado!</h2>
-                    <p>Presentá este ticket al llegar al local</p>
-                </div>
-                <div class="ticket-body">
-                    <div class="ticket-row"><span>Cliente:</span> <strong id="tk-cliente"></strong></div>
-                    <div class="ticket-row"><span>Barbero:</span> <strong id="tk-barbero"></strong></div>
-                    <div class="ticket-row"><span>Servicio:</span> <strong id="tk-servicio"></strong></div>
-                    <div class="ticket-row"><span>Fecha:</span> <strong id="tk-fecha"></strong></div>
-                    <div class="ticket-row"><span>Horario:</span> <strong id="tk-hora"></strong></div>
-                    <div class="ticket-row"><span>Método Pago:</span> <strong id="tk-pago"></strong></div>
-                    <div class="ticket-total"><span>Total a pagar:</span> <span id="tk-total"></span></div>
-                </div>
-                <div class="ticket-footer">
-                    <button class="btn-whatsapp-send" onclick="enviarMensajeWhatsApp()">Enviar Comprobante por WhatsApp </button>
-                </div>
+            <div class="success-container" style="text-align: center; padding: 40px 20px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 450px; margin: 0 auto;">
+                <div class="success-icon" style="font-size: 65px; color: #25D366; margin-bottom: 20px;">✓</div>
+                <h2 style="color: #222; margin-bottom: 10px;">¡Turno Reservado con Éxito!</h2>
+                <p style="color: #555; font-size: 1.1em; line-height: 1.5; margin-bottom: 25px;">
+                    Te acabamos de enviar un mensaje de <strong>WhatsApp</strong> con todos los detalles y la confirmación de tu reserva.
+                </p>
+                <p style="color: #888; font-size: 0.95em; font-style: italic; margin-bottom: 30px;">
+                    ¡Te esperamos en el local!
+                </p>
+                <button onclick="location.reload()" class="btn-next" style="width: 100%; max-width: 250px; margin: 0 auto; display: block;">Sacar otro turno</button>
             </div>
         </section>
     </main>
 
     <footer>
-        <p> Barberia - San Salvador de Jujuy </p>
+        <p>Barberia - San Salvador de Jujuy</p>
     </footer>
 
     <script src="script.js"></script>
