@@ -1,7 +1,7 @@
 // Variable global para retener la info antes de mandar a la API
 let turnoRegistrado = {};
 
-// 1. CONTROL DE CALENDARIO: Bloquear días pasados y domingos
+// 1. CONTROL DE CALENDARIO: Bloquear días pasados y domingos + escuchar cambios
 document.addEventListener("DOMContentLoaded", () => {
     const dateInput = document.getElementById('appointment-date');
     if(dateInput) {
@@ -28,55 +28,95 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // Escucha si cambia el barbero seleccionado para recalcular horarios al toque
+    document.querySelectorAll('input[name="barber"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            generarHorariosDinamicos();
+        });
+    });
 });
 
-// 2. HORARIOS DINÁMICOS EN BASE AL BARBERO
-// 2. HORARIOS DINÁMICOS EN BASE AL BARBERO Y TURNOS OCUPADOS
-// 2. HORARIOS DINÁMICOS EN BASE AL BARBERO Y TURNOS OCUPADOS
-function generarHorariosDinamicos() {
-    const barbero = document.querySelector('input[name="barber"]:checked').value;
+// 2. HORARIOS DINÁMICOS: LOS LUNES ABREN DESDE LAS 17 Y LOS OCUPADOS DESAPARECEN
+async function generarHorariosDinamicos() {
+    const barberoInput = document.querySelector('input[name="barber"]:checked');
+    const dateInput = document.getElementById('appointment-date');
     const container = document.getElementById('time-slots-container');
-    container.innerHTML = ""; // Limpiamos
-
-    // 1. Definimos la grilla de horarios del local según el barbero
-    let horasDisponibles = [];
-    if (barbero === "Nico" || barbero === "Tito") {
-        horasDisponibles = ["10:00", "11:00", "12:00", "13:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
-    } else {
-        horasDisponibles = ["10:30", "12:00", "13:00", "15:00", "17:00", "19:00", "21:00"];
+    
+    // Si falta elegir barbero o fecha, limpiamos el contenedor y no hacemos nada
+    if (!barberoInput || !dateInput.value) {
+        container.innerHTML = "";
+        return;
     }
 
-    // 2. SIMULACIÓN DE TURNOS OCUPADOS (Mañana vendrá de la base de datos)
-    let turnosOcupados = []; 
-    if (barbero === "Nico") {
-        turnosOcupados = ["12:00", "18:00"]; 
-    }
-    if (barbero === "Tito") {
-        turnosOcupados = ["17:00"];
-    }
+    const barbero = barberoInput.value;
+    const fecha = dateInput.value; // Formato YYYY-MM-DD
+    
+    // Detectamos qué día de la semana es (0 = Domingo, 1 = Lunes, 2 = Martes, etc.)
+    const numeroDiaSemana = new Date(fecha + 'T00:00:00').getDay();
 
-    // 3. Dibujamos los botones en la pantalla
-    horasDisponibles.forEach(hora => {
-        const estaOcupado = turnosOcupados.includes(hora);
+    // Formato seguro con guiones invertidos (DD-MM-YYYY) para viajar limpio en la URL sin %2F
+    const fechaParaEnviar = fecha.split('-').reverse().join('-'); 
 
-        if (estaOcupado) {
-            // Versión limpia: mismo diseño, pero grisado y deshabilitado
-            container.innerHTML += `
-                <label class="time-option" style="background-color: #eaeaea; border-color: #d1d1d1; color: #aaaaaa; cursor: not-allowed; opacity: 0.6;">
-                    <input type="radio" name="time" value="${hora}" disabled>
-                    <span>${hora} hs</span>
-                </label>
-            `;
+    container.innerHTML = `<p style="color: #666; font-size: 14px;">Buscando horarios libres...</p>`;
+
+    try {
+        // Definimos la grilla de horarios base del local según el barbero o el día lunes
+        let horasDisponibles = [];
+
+        if (numeroDiaSemana === 1) {
+            // 📌 REGLA ESPECIAL: Si es LUNES, abren solo desde las 17:00 hs para todos los barberos
+            horasDisponibles = ["17:00", "18:00", "19:00", "20:00", "21:00"];
         } else {
-            // Botón normal disponible
+            // Grilla normal para el resto de los días (Martes a Sábado)
+            if (barbero === "Nico" || barbero === "Tito") {
+                horasDisponibles = ["10:00", "11:00", "12:00", "13:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
+            } else {
+                horasDisponibles = ["10:30", "12:00", "13:00", "15:00", "17:00", "19:00", "21:00"];
+            }
+        }
+
+        // Consultamos las horas ocupadas enviando la fecha limpia con guiones
+        const respuesta = await fetch(`http://localhost:3000/api/horarios-ocupados?fecha=${fechaParaEnviar}&barbero=${encodeURIComponent(barbero)}`);
+        const datos = await respuesta.json();
+        
+        let turnosOcupados = [];
+        if (datos.success) {
+            turnosOcupados = datos.horariosOcupados; 
+        }
+
+        container.innerHTML = ""; // Limpiamos el texto de carga
+
+        let horariosMostrados = 0;
+
+        // Dibujamos los botones en la pantalla
+        horasDisponibles.forEach(hora => {
+            const estaOcupado = turnosOcupados.includes(hora);
+
+            // Si está ocupado en Supabase, el bloque directamente desaparece
+            if (estaOcupado) {
+                return; 
+            }
+
+            // Si está libre, se genera el botón de forma normal
+            horariosMostrados++;
             container.innerHTML += `
                 <label class="time-option">
                     <input type="radio" name="time" value="${hora}">
                     <span>${hora} hs</span>
                 </label>
             `;
+        });
+
+        // Alerta visual por si se reservó absolutamente todo ese día
+        if (horariosMostrados === 0) {
+            container.innerHTML = `<p style="color: #ff9800; font-size: 14px; font-weight: bold;">¡Se agotaron los turnos! Este barbero no tiene horarios disponibles para esta fecha.</p>`;
         }
-    });
+
+    } catch (error) {
+        console.error("❌ Error al conectar con el endpoint de horarios:", error);
+        container.innerHTML = `<p style="color: #ff0000; font-size: 14px;">Error al cargar los horarios. Por favor, reintentá.</p>`;
+    }
 }
 
 // 3. NAVEGACIÓN Y BARRA DE PROGRESO
@@ -107,15 +147,6 @@ function nextStep(stepNumber) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function prevStep(stepNumber) {
-    const progreso = (stepNumber / 4) * 100;
-    document.getElementById('progress').style.width = `${progreso}%`;
-
-    document.querySelectorAll('.booking-section').forEach(s => s.classList.remove('active'));
-    document.getElementById(`step-${stepNumber}`).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 // 4. CONFIRMACIÓN DIRECTA Y ENVÍO AL BACKEND EN LA NUBE 🤖
 function confirmarTurno() {
     const barbero = document.querySelector('input[name="barber"]:checked').value;
@@ -133,10 +164,8 @@ function confirmarTurno() {
     const fechaFormateada = fecha.split('-').reverse().join('/');
     const precioServicio = servicioInput.getAttribute('data-price');
 
-    // Mapeo directo de los números reales de los barberos
     let numeroBarbero = (barbero === "Nico") ? "5493885706742" : "5493884031208";
 
-    // Armamos el JSON limpio para el nuevo backend
     const datosTurno = {
         cliente: nombre,
         barbero: barbero,
@@ -149,12 +178,8 @@ function confirmarTurno() {
         whatsapp_barbero: numeroBarbero
     };
 
-    // Actualizamos la barra visual al 100%
     document.getElementById('progress').style.width = "100%";
 
-    // 🚀 PETICIÓN HTTP AL BACKEND DEFINITIVO EN INTERNET
-    // NOTA: Cuando hagas el deploy de tu server.js en Render o Railway,
-    // vas a reemplazar 'http://localhost:3000' por la URL real que te den.
     fetch('http://localhost:3000/api/nuevo-turno', {
         method: 'POST',
         headers: {
@@ -165,12 +190,11 @@ function confirmarTurno() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Pasamos directo a la pantalla final de éxito limpia
             document.querySelectorAll('.booking-section').forEach(s => s.classList.remove('active'));
             document.getElementById('step-5').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-            alert("Hubo un problema al registrar el turno en el sistema. Por favor, reintentá.");
+            alert(data.error || "Hubo un problema al registrar el turno en el sistema. Por favor, reintentá.");
         }
     })
     .catch(error => {
