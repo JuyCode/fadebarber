@@ -76,8 +76,8 @@ async function generarHorariosDinamicos() {
             }
         }
 
-        // Consultamos las horas ocupadas enviando la fecha limpia con guiones
-        const respuesta = await fetch(`http://localhost:3000/api/horarios-ocupados?fecha=${fechaParaEnviar}&barbero=${encodeURIComponent(barbero)}`);
+        // 🚀 CONSULTA REAL AL BACKEND EN RENDERS
+        const respuesta = await fetch(`https://fadebarber.onrender.com/api/horarios-ocupados?fecha=${fechaParaEnviar}&barbero=${encodeURIComponent(barbero)}`);
         const datos = await respuesta.json();
         
         let turnosOcupados = [];
@@ -180,7 +180,8 @@ function confirmarTurno() {
 
     document.getElementById('progress').style.width = "100%";
 
-    fetch('http://localhost:3000/api/nuevo-turno', {
+    // 🚀 PETICIÓN HTTP AL BACKEND REAL EN PRODUCTION
+    fetch('https://fadebarber.onrender.com/api/nuevo-turno', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
