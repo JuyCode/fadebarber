@@ -1,52 +1,73 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
+import { createClient } from '@supabase/supabase-base'; // Importamos el cliente de Supabase
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000; // Render usa el puerto 10000 por defecto en su entorno
 
 app.use(cors());
 app.use(express.json());
 
-// 2. CONEXIÓN DIRECTA POR PUERTO WEB
-const MONGO_URI = 'mongodb+srv://luchocatorcino60_db_user:d0ggAdUJ1Eyyex2n@cluster0.zcrdxb7.mongodb.net/barberia?retryWrites=true&w=majority&tls=true&srvMaxHosts=1';
+// 1. CONEXIÓN DIRECTA A SUPABASE (Tu base de datos real y rápida)
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://xtfcrbdrgsknmvpswuzm.supabase.co'; 
+const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0ZmNyYmRyZ3Nrbm12cHN3dXptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTgzMTU0MDAsImV4cCI6MjAzMzkxMTQwMH0.Xb4D5_E9Gz_Key_Real_De_Tu_Supabase';
 
-mongoose.connect(MONGO_URI)
-    .then(() => console.log('🍃 Conectado exitosamente a MongoDB Atlas (Base de Datos Real)'))
-    .catch(err => console.error('❌ Error crítico al conectar a MongoDB:', err));
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 3. Estructura para guardar tus turnos en la base de datos
-const turnoSchema = new mongoose.Schema({
-    cliente: String,
-    barbero: String,
-    servicio: String,
-    fecha: String,
-    hora: String,
-    pago: String,
-    precio: String,
-    whatsapp_cliente: String,
-    whatsapp_barbero: String,
-    creadoEn: { type: Date, default: Date.now }
+// 2. ENDPOINT: CONSULTAR HORARIOS OCUPADOS DESDE SUPABASE
+app.get('/api/horarios-ocupados', async (req, res) => {
+    const { fecha, barbero } = req.query;
+
+    if (!fecha || !barbero) {
+        return res.status(400).json({ success: false, error: 'Faltan parámetros requeridos: fecha y barbero' });
+    }
+
+    try {
+        // Buscamos en la tabla 'turnos' de Supabase los horarios reservados para ese barbero en ese día
+        const { data: turnos, error } = await supabase
+            .from('turnos')
+            .select('hora')
+            .eq('fecha', fecha)
+            .eq('barbero', barbero);
+
+        if (error) throw error;
+
+        // Mapeamos para devolver solo un array con las horas ocupadas (ej: ["10:00", "13:00"])
+        const horariosOcupados = turnos.map(t => t.hora);
+
+        res.status(200).json({ success: true, horariosOcupados });
+    } catch (error) {
+        console.error('❌ Error al consultar horarios en Supabase:', error);
+        res.status(500).json({ success: false, error: 'Error al consultar la grilla de horarios' });
+    }
 });
 
-const Turno = mongoose.model('Turno', turnoSchema);
-
+// 3. ENDPOINT: CREAR NUEVO TURNO (VALIDA EN SUPABASE Y ENVÍA WHATSAPP CON KAPSO)
 app.post('/api/nuevo-turno', async (req, res) => {
     const { cliente, barbero, servicio, fecha, hora, pago, precio, whatsapp_cliente, whatsapp_barbero } = req.body;
     console.log(`📡 Nuevo turno recibido de ${cliente} para el barbero ${barbero}`);
 
     try {
-        // 4. EL CANDADO: Validamos duplicados
-        const turnoDuplicado = await Turno.findOne({ fecha, hora, barbero });
-        if (turnoDuplicado) {
+        // EL CANDADO: Validamos en Supabase si ya existe un turno para el mismo barbero, fecha y hora
+        const { data: turnoExistente, error: errorBusqueda } = await supabase
+            .from('turnos')
+            .select('*')
+            .eq('fecha', fecha)
+            .eq('hora', hora)
+            .eq('barbero', barbero)
+            .maybeSingle();
+
+        if (errorBusqueda) throw errorBusqueda;
+
+        if (turnoExistente) {
             console.warn(`⚠️ Intento de duplicado bloqueado: El barbero ${barbero} ya tiene ocupado el horario de las ${hora} hs.`);
             return res.status(400).json({ success: false, error: `El horario de las ${hora} hs ya fue reservado para el barbero ${barbero}.` });
         }
 
-        // 5. Endpoints de Kapso
+        // CONTROL DE ENDPOINTS DE KAPSO FOR WHATSAPP
         const urlKapsoNico = "https://api.kapso.ai/platform/v1/workflows/361c3bc1-be2f-44ea-ab82-2cfb42ea4466/executions";
         const urlKapsoTito = "https://api.kapso.ai/platform/v1/workflows/b9b45fdd-9beb-4672-a239-fe54d5c42157/executions";
         const urlDestino = (barbero === "Nico") ? urlKapsoNico : urlKapsoTito;
@@ -68,15 +89,30 @@ app.post('/api/nuevo-turno', async (req, res) => {
         });
 
         if (!respuestaKapso.ok) {
-            console.warn(`⚠️ Kapso rebotó el pedido. Código: ${respuestaKapso.status}`);
+            console.warn(`⚠️ Kapso rebotó el pedido de mensaje. Código: ${respuestaKapso.status}`);
         } else {
-            console.log('✅ Datos enviados a Kapso. Mensajes de WhatsApp en camino.');
+            console.log('✅ Datos enviados a Kapso de forma exitosa.');
         }
 
-        // 6. GUARDADO PERMANENTE
-        const nuevoTurno = new Turno({ cliente, barbero, servicio, fecha, hora, pago, precio, whatsapp_cliente, whatsapp_barbero });
-        await nuevoTurno.save();
-        console.log(`💾 Turno guardado exitosamente en MongoDB Atlas para ${cliente}`);
+        // GUARDADO PERMANENTE EN SUPABASE
+        const { error: errorInsercion } = await supabase
+            .from('turnos')
+            .insert([
+                { 
+                    cliente, 
+                    barbero, 
+                    servicio, 
+                    fecha, 
+                    hora, 
+                    pago, 
+                    precio, 
+                    whatsapp_cliente, 
+                    whatsapp_barbero 
+                }
+            ]);
+
+        if (errorInsercion) throw errorInsercion;
+        console.log(`💾 Turno guardado exitosamente en Supabase para ${cliente}`);
 
         res.status(200).json({ success: true, message: 'Turno procesado y guardado correctamente' });
 
@@ -86,7 +122,6 @@ app.post('/api/nuevo-turno', async (req, res) => {
     }
 });
 
-// ... Resto del código de escucha igual ...
 app.listen(PORT, () => {
     console.log(`🚀 Servidor backend corriendo de forma segura en el puerto ${PORT}`);
 });
