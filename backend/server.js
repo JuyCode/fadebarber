@@ -11,9 +11,11 @@ const PORT = process.env.PORT || 10000; // Render usa el puerto 10000 por defect
 app.use(cors());
 app.use(express.json());
 
-// 1. CONEXIÓN DIRECTA A SUPABASE (Tu base de datos real y rápida)
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://xtfcrbdrgsknmvpswuzm.supabase.co'; 
-const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0ZmNyYmRyZ3Nrbm12cHN3dXptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTgzMTU0MDAsImV4cCI6MjAzMzkxMTQwMH0.Xb4D5_E9Gz_Key_Real_De_Tu_Supabase';
+// 1. CONEXIÓN DIRECTA A SUPABASE (Tus datos reales de la captura)
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://heirivzfsksbrfdesfwa.supabase.co'; 
+
+// 📌 EN LAS COMILLAS DE ABAJO, BORRÁ LO QUE PUSE Y PEGÁ TU CLAVE (La que copiaste con los cuadraditos al lado de Publishable key)
+const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_gNLnzXOEvSoZqzJyA3LTOQ_P4kRbpJ_';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -45,7 +47,7 @@ app.get('/api/horarios-ocupados', async (req, res) => {
     }
 });
 
-// 3. ENDPOINT: CREAR NUEVO TURNO (VALIDA EN SUPABASE Y ENVÍA WHATSAPP CON KAPSO)
+// 3. ENDPOINT: CREAR NUEVO TURNO (SOLO VALIDA Y GUARDA EN SUPABASE)
 app.post('/api/nuevo-turno', async (req, res) => {
     const { cliente, barbero, servicio, fecha, hora, pago, precio, whatsapp_cliente, whatsapp_barbero } = req.body;
     console.log(`📡 Nuevo turno recibido de ${cliente} para el barbero ${barbero}`);
@@ -67,34 +69,7 @@ app.post('/api/nuevo-turno', async (req, res) => {
             return res.status(400).json({ success: false, error: `El horario de las ${hora} hs ya fue reservado para el barbero ${barbero}.` });
         }
 
-        // CONTROL DE ENDPOINTS DE KAPSO FOR WHATSAPP
-        const urlKapsoNico = "https://api.kapso.ai/platform/v1/workflows/361c3bc1-be2f-44ea-ab82-2cfb42ea4466/executions";
-        const urlKapsoTito = "https://api.kapso.ai/platform/v1/workflows/b9b45fdd-9beb-4672-a239-fe54d5c42157/executions";
-        const urlDestino = (barbero === "Nico") ? urlKapsoNico : urlKapsoTito;
-
-        const datosParaKapso = {
-            workflow_execution: {
-                phone_number: whatsapp_cliente,
-                variables: { nombre: cliente, fecha, hora, precio }
-            }
-        };
-
-        const respuestaKapso = await fetch(urlDestino, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-API-Key': '5a0a8128ff1d87ba2b54b0673f3ff75f56abd66bb0e207a8330cc9c865254105'
-            },
-            body: JSON.stringify(datosParaKapso)
-        });
-
-        if (!respuestaKapso.ok) {
-            console.warn(`⚠️ Kapso rebotó el pedido de mensaje. Código: ${respuestaKapso.status}`);
-        } else {
-            console.log('✅ Datos enviados a Kapso de forma exitosa.');
-        }
-
-        // GUARDADO PERMANENTE EN SUPABASE
+        // GUARDADO PERMANENTE EN SUPABASE DIRECTO
         const { error: errorInsercion } = await supabase
             .from('turnos')
             .insert([
@@ -114,6 +89,7 @@ app.post('/api/nuevo-turno', async (req, res) => {
         if (errorInsercion) throw errorInsercion;
         console.log(`💾 Turno guardado exitosamente en Supabase para ${cliente}`);
 
+        // Devolvemos éxito inmediato para que el frontend dispare el enlace wa.me
         res.status(200).json({ success: true, message: 'Turno procesado y guardado correctamente' });
 
     } catch (error) {

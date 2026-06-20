@@ -43,62 +43,54 @@ async function generarHorariosDinamicos() {
     const dateInput = document.getElementById('appointment-date');
     const container = document.getElementById('time-slots-container');
     
-    // Si falta elegir barbero o fecha, limpiamos el contenedor y no hacemos nada
     if (!barberoInput || !dateInput.value) {
         container.innerHTML = "";
         return;
     }
 
     const barbero = barberoInput.value;
-    const fecha = dateInput.value; // Formato YYYY-MM-DD
-    
-    // Detectamos qué día de la semana es (0 = Domingo, 1 = Lunes, 2 = Martes, etc.)
+    const fecha = dateInput.value; 
     const numeroDiaSemana = new Date(fecha + 'T00:00:00').getDay();
 
-    // Formato seguro con guiones invertidos (DD-MM-YYYY) para viajar limpio en la URL sin %2F
-    const fechaParaEnviar = fecha.split('-').reverse().join('-'); 
+    // Convertimos YYYY-MM-DD a DD/MM/YYYY con barras
+    const fechaParaEnviar = fecha.split('-').reverse().join('/'); 
 
     container.innerHTML = `<p style="color: #666; font-size: 14px;">Buscando horarios libres...</p>`;
 
     try {
-        // Definimos la grilla de horarios base del local según el barbero o el día lunes
         let horasDisponibles = [];
 
         if (numeroDiaSemana === 1) {
-            // 📌 REGLA ESPECIAL: Si es LUNES, abren solo desde las 17:00 hs para todos los barberos
             horasDisponibles = ["17:00", "18:00", "19:00", "20:00", "21:00"];
         } else {
-            // Grilla normal para el resto de los días (Martes a Sábado)
-            if (barbero === "Nico" || barbero === "Tito") {
+            // Se incluye a Agus en la grilla estándar de 9 turnos diarios junto a Nico y Tito
+            if (barbero === "Nico" || barbero === "Tito" || barbero === "Agus") {
                 horasDisponibles = ["10:00", "11:00", "12:00", "13:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
             } else {
                 horasDisponibles = ["10:30", "12:00", "13:00", "15:00", "17:00", "19:00", "21:00"];
             }
         }
 
-        // 🚀 CONSULTA REAL AL BACKEND EN RENDERS
-        const respuesta = await fetch(`https://fadebarber.onrender.com/api/horarios-ocupados?fecha=${fechaParaEnviar}&barbero=${encodeURIComponent(barbero)}`);
+        // 🚀 URL ACTUALIZADA: Apunta directo a tu backend en producción de Render
+        const respuesta = await fetch(`https://fadebarber.onrender.com/api/horarios-ocupados?fecha=${encodeURIComponent(fechaParaEnviar)}&barbero=${encodeURIComponent(barbero)}`);
         const datos = await respuesta.json();
         
         let turnosOcupados = [];
-        if (datos.success) {
+        if (datos && datos.success) {
             turnosOcupados = datos.horariosOcupados; 
         }
 
-        container.innerHTML = ""; // Limpiamos el texto de carga
+        container.innerHTML = ""; 
 
         let horariosMostrados = 0;
 
-        // Dibujamos los botones en la pantalla
         horasDisponibles.forEach(hora => {
             const estaOcupado = turnosOcupados.includes(hora);
 
-            // Si está ocupado en Supabase, el bloque directamente desaparece
             if (estaOcupado) {
                 return; 
             }
 
-            // Si está libre, se genera el botón de forma normal
             horariosMostrados++;
             container.innerHTML += `
                 <label class="time-option">
@@ -108,7 +100,6 @@ async function generarHorariosDinamicos() {
             `;
         });
 
-        // Alerta visual por si se reservó absolutamente todo ese día
         if (horariosMostrados === 0) {
             container.innerHTML = `<p style="color: #ff9800; font-size: 14px; font-weight: bold;">¡Se agotaron los turnos! Este barbero no tiene horarios disponibles para esta fecha.</p>`;
         }
@@ -147,7 +138,7 @@ function nextStep(stepNumber) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 4. CONFIRMACIÓN DIRECTA Y ENVÍO AL BACKEND EN LA NUBE 🤖
+// 4. CONFIRMACIÓN DIRECTA Y ENVÍO AL SERVER EN RENDER 🤖 + APERTURA DE WHATSAPP AL BARBERO
 function confirmarTurno() {
     const barbero = document.querySelector('input[name="barber"]:checked').value;
     const servicioInput = document.querySelector('input[name="service"]:checked');
@@ -164,7 +155,15 @@ function confirmarTurno() {
     const fechaFormateada = fecha.split('-').reverse().join('/');
     const precioServicio = servicioInput.getAttribute('data-price');
 
-    let numeroBarbero = (barbero === "Nico") ? "5493885706742" : "5493884031208";
+    // 🌟 ASIGNACIÓN REAL DE LOS CELULARES DE CADA BARBERO
+    let numeroBarbero = "";
+    if (barbero === "Nico") {
+        numeroBarbero = "5493885706742";
+    } else if (barbero === "Tito") {
+        numeroBarbero = "5493884031208";
+    } else if (barbero === "Agus") {
+        numeroBarbero = "5493883137597"; 
+    }
 
     const datosTurno = {
         cliente: nombre,
@@ -180,7 +179,7 @@ function confirmarTurno() {
 
     document.getElementById('progress').style.width = "100%";
 
-    // 🚀 PETICIÓN HTTP AL BACKEND REAL EN PRODUCTION
+    // 🚀 URL ACTUALIZADA: Petición HTTP directa a tu nube en Render
     fetch('https://fadebarber.onrender.com/api/nuevo-turno', {
         method: 'POST',
         headers: {
@@ -191,9 +190,24 @@ function confirmarTurno() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            const numeroDestino = numeroBarbero.replace(/\s+/g, '').replace(/-/g, '').replace(/\+/g, '');
+
+            const mensaje = `Hola ${barbero}! Acabo de reservar un turno desde la pagina web. Acá te dejo mis datos:\n\n` +
+                            `Cliente: ${nombre}\n` +
+                            `Servicio: ${servicioInput.value}\n` +
+                            `Fecha: ${fechaFormateada}\n` +
+                            `Hora: ${hora} hs\n\n` +
+                            `¡Nos vemos!`;
+
+            const mensajeCodificado = encodeURIComponent(mensaje);
+            const urlWhatsApp = `https://wa.me/${numeroDestino}?text=${mensajeCodificado}`;
+
             document.querySelectorAll('.booking-section').forEach(s => s.classList.remove('active'));
             document.getElementById('step-5').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            window.open(urlWhatsApp, '_blank');
+
         } else {
             alert(data.error || "Hubo un problema al registrar el turno en el sistema. Por favor, reintentá.");
         }
