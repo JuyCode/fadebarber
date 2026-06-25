@@ -35,6 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
             generarHorariosDinamicos();
         });
     });
+
+    // AYUDA VISUAL: Coloca un placeholder instructivo en el input de teléfono si existe
+    const phoneInput = document.getElementById('client-phone');
+    if (phoneInput) {
+        phoneInput.placeholder = "Ej: 5493884418917 (Sin espacios ni signos)";
+    }
 });
 
 // 2. HORARIOS DINÁMICOS: LOS LUNES ABREN DESDE LAS 17 Y LOS OCUPADOS DESAPARECEN
@@ -146,10 +152,23 @@ function confirmarTurno() {
     const hora = document.querySelector('input[name="time"]:checked').value;
     const pago = document.querySelector('input[name="payment"]:checked');
     const nombre = document.getElementById('client-name').value.trim();
-    const telefonoCliente = document.getElementById('client-phone').value.trim();
+    let telefonoCliente = document.getElementById('client-phone').value.trim();
 
     if (!pago || !nombre || !telefonoCliente) {
         alert("Por favor, completa todos los datos de contacto."); return;
+    }
+
+    // 📱 VALIDACIÓN DE CELULAR COMPATIBLE CON WHATSAPP INTERNACIONAL
+    // Remueve espacios, guiones o símbolos que el usuario haya metido por error
+    telefonoCliente = telefonoCliente.replace(/\s+/g, '').replace(/-/g, '').replace(/\+/g, '');
+
+    // Verifica que empiece estrictamente con 549 y tenga entre 12 y 13 dígitos numéricos en total
+    const formatoValido = /^549\d{9,10}$/.test(telefonoCliente);
+
+    if (!formatoValido) {
+        alert("Número de WhatsApp inválido.\n\nPor favor, ingresalo comenzando con 549 seguido de tu código de área sin el 15.\n\nEjemplo válido: 5493884418917");
+        document.getElementById('client-phone').focus();
+        return;
     }
 
     const fechaFormateada = fecha.split('-').reverse().join('/');
@@ -202,11 +221,13 @@ function confirmarTurno() {
             const mensajeCodificado = encodeURIComponent(mensaje);
             const urlWhatsApp = `https://wa.me/${numeroDestino}?text=${mensajeCodificado}`;
 
+            // Cambiamos la vista de la sección a la pantalla de éxito final
             document.querySelectorAll('.booking-section').forEach(s => s.classList.remove('active'));
             document.getElementById('step-5').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            window.open(urlWhatsApp, '_blank');
+            // 🔥 SOLUCIÓN CELULARES: Redirige en la misma pestaña para burlar los bloqueadores de pop-ups
+            window.location.href = urlWhatsApp;
 
         } else {
             alert(data.error || "Hubo un problema al registrar el turno en el sistema. Por favor, reintentá.");
