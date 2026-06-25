@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // AYUDA VISUAL: Coloca un placeholder instructivo en el input de teléfono si existe
     const phoneInput = document.getElementById('client-phone');
     if (phoneInput) {
-        phoneInput.placeholder = "Ej: 5493884418917 (Sin espacios ni signos)";
+        phoneInput.placeholder = "Ej: 5493884418918 (Sin espacios ni signos)";
     }
 });
 
@@ -166,7 +166,7 @@ function confirmarTurno() {
     const formatoValido = /^549\d{9,10}$/.test(telefonoCliente);
 
     if (!formatoValido) {
-        alert("Número de WhatsApp inválido.\n\nPor favor, ingresalo comenzando con 549 seguido de tu código de área sin el 15.\n\nEjemplo válido: 5493884418917");
+        alert("Número de WhatsApp inválido.\n\nPor favor, ingresalo comenzando con 549 .\n\nEjemplo válido: 5493884418918");
         document.getElementById('client-phone').focus();
         return;
     }
