@@ -5,10 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fade Barber</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Ajustes rápidos para que el menú principal quede espectacular */
+        .menu-logo-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .menu-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            background-color: #222; /* Por si el logo es transparente */
+        }
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        .btn-menu {
+            display: block;
+            text-align: center;
+            background-color: #111;
+            color: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, background-color 0.2s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn-menu:active {
+            transform: scale(0.98);
+            background-color: #222;
+        }
+        .btn-menu-reserva {
+            background-color: #bfa15f; /* Color dorado/barber para destacar */
+            color: #000;
+        }
+        .btn-menu-reserva:active {
+            background-color: #aa8f53;
+        }
+        /* Oculta el header de pasos por defecto al cargar el inicio */
+        header.steps-header {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-    <header>
+    <!-- HEADER PARA LOS PASOS (Se activa dinámicamente al reservar) -->
+    <header class="steps-header" id="main-steps-header">
         <div class="progress-container">
             <div class="progress-bar" id="progress"></div>
         </div>
@@ -17,7 +73,37 @@
     </header>
 
     <main class="container">
-        <section id="step-1" class="booking-section active fade-in">
+
+        <!-- SECCIÓN 0: MENÚ PRINCIPAL DE BIENVENIDA -->
+        <section id="step-0" class="booking-section active fade-in" style="display: block;">
+            <div class="menu-logo-container">
+                <!-- Podés cambiar "logo.png" por el nombre real de la foto del logo de los chicos -->
+                <img src="logo_f4de.jpeg" alt="Fade Barber Logo" class="menu-logo" onerror="this.src='logo_f4de.jpeg';">
+                <h2 style="margin-top: 15px; color: #111;">F4DE STUDIO</h2>
+                <p style="color: #666; font-size: 0.95em; margin-top: -5px;">Elegí una opción para continuar</p>
+            </div>
+
+            <div class="menu-grid">
+                <!-- Botón 1: Sacar Turno (Activa el flujo del sistema) -->
+                <button class="btn-menu btn-menu-reserva" onclick="iniciarReserva()">
+                    📅 Reservar un Turno
+                </button>
+
+                <!-- Botón 2: Ubicación en Google Maps -->
+                <!-- REEMPLAZÁ el '#' por el link real de Google Maps cuando te lo pasen -->
+                <a href="https://maps.app.goo.gl/Dzn4vhaJzSTpGbB36?g_st=aw" target="_blank" class="btn-menu">
+                    📍 Ver Ubicación 
+                </a>
+
+                <!-- Botón 3: Instagram Oficial -->
+                <a href="https://www.instagram.com/f4de.studio" target="_blank" class="btn-menu">
+                    📸 Nuestro Instagram 
+                </a>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 1: SELECCIÓN DE BARBERO (Oculta por defecto al inicio) -->
+        <section id="step-1" class="booking-section fade-in" style="display: none;">
             <h2>1. Selecciona tu Barbero</h2>
             <div class="cards-grid">
                 <label class="card-option">
@@ -50,7 +136,8 @@
             </div>
         </section>
 
-        <section id="step-2" class="booking-section fade-in">
+        <!-- SECCIÓN 2: SELECCIÓN DE SERVICIO -->
+        <section id="step-2" class="booking-section fade-in" style="display: none;">
             <h2>2. Selecciona el Servicio</h2>
             <div class="services-list">
                 <label class="service-option">
@@ -88,7 +175,8 @@
             </div>
         </section>
 
-        <section id="step-3" class="booking-section fade-in">
+        <!-- SECCIÓN 3: FECHA Y HORARIO -->
+        <section id="step-3" class="booking-section fade-in" style="display: none;">
             <h2>3. Fecha y Horario</h2>
             <div class="date-picker-container">
                 <label for="appointment-date">Elegí el día (Lunes a Sábado):</label>
@@ -103,7 +191,8 @@
             </div>
         </section>
 
-        <section id="step-4" class="booking-section fade-in">
+        <!-- SECCIÓN 4: PAGO Y CONTACTO -->
+        <section id="step-4" class="booking-section fade-in" style="display: none;">
             <h2>4. Pago y Contacto</h2>
             <div class="payment-options">
                 <label class="payment-card">
@@ -136,7 +225,8 @@
             </div>
         </section>
 
-        <section id="step-5" class="booking-section fade-in">
+        <!-- SECCIÓN 5: PANTALLA DE ÉXITO -->
+        <section id="step-5" class="booking-section fade-in" style="display: none;">
             <div class="success-container" style="text-align: center; padding: 40px 20px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 450px; margin: 0 auto;">
                 <div class="success-icon" style="font-size: 65px; color: #25D366; margin-bottom: 20px;">✓</div>
                 <h2 style="color: #222; margin-bottom: 10px;">¡Turno Reservado con Éxito!</h2>
@@ -152,7 +242,7 @@
     </main>
 
     <footer>
-        <p>Barberia - San Salvador de Jujuy</p>
+        <p>f4de.studio - San Salvador de Jujuy</p>
     </footer>
 
     <script src="script.js"></script>
