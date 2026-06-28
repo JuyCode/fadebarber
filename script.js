@@ -116,7 +116,7 @@ async function generarHorariosDinamicos() {
     }
 }
 
-// 3. NAVEGACIÓN Y BARRA DE PROGRESO
+// 3. NAVEGACIÓN Y BARRA DE PROGRESO (PARCHADA PARA MANEJAR VISIBILIDAD DISPLAY)
 function nextStep(stepNumber) {
     if (stepNumber === 2) {
         if (!document.querySelector('input[name="barber"]:checked')) {
@@ -137,10 +137,55 @@ function nextStep(stepNumber) {
     }
 
     const progreso = (stepNumber / 4) * 100;
-    document.getElementById('progress').style.width = `${progreso}%`;
+    const progressEl = document.getElementById('progress');
+    if (progressEl) progressEl.style.width = `${progreso}%`;
 
-    document.querySelectorAll('.booking-section').forEach(s => s.classList.remove('active'));
-    document.getElementById(`step-${stepNumber}`).classList.add('active');
+    // Ocultamos absolutamente todas las secciones de manera limpia con display none
+    document.querySelectorAll('.booking-section').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+    });
+    
+    // Mostramos la sección correspondiente usando display block
+    const proximoPaso = document.getElementById(`step-${stepNumber}`);
+    if (proximoPaso) {
+        proximoPaso.style.display = 'block';
+        proximoPaso.classList.add('active');
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// NUEVA FUNCIÓN COMPLEMENTARIA: FUNCIÓN ATRÁS REESTRUCTURADA
+function prevStep(stepNumber) {
+    // Si estamos en el paso 1 y volvemos atrás, mostramos el menú de bienvenida (Paso 0)
+    if (stepNumber === 1) {
+        document.getElementById('main-steps-header').style.display = 'none';
+        document.querySelectorAll('.booking-section').forEach(s => {
+            s.classList.remove('active');
+            s.style.display = 'none';
+        });
+        const paso0 = document.getElementById('step-0');
+        paso0.style.display = 'block';
+        paso0.classList.add('active');
+        return;
+    }
+
+    const progreso = ((stepNumber) / 4) * 100;
+    const progressEl = document.getElementById('progress');
+    if (progressEl) progressEl.style.width = `${progreso}%`;
+
+    document.querySelectorAll('.booking-section').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+    });
+
+    const pasoAnterior = document.getElementById(`step-${stepNumber}`);
+    if (pasoAnterior) {
+        pasoAnterior.style.display = 'block';
+        pasoAnterior.classList.add('active');
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -166,7 +211,7 @@ function confirmarTurno() {
     const formatoValido = /^549\d{9,10}$/.test(telefonoCliente);
 
     if (!formatoValido) {
-        alert("Número de WhatsApp inválido.\n\nPor favor, ingresalo comenzando con 549 .\n\nEjemplo válido: 5493884418918");
+        alert("Número de WhatsApp inválido.\n\nPor favor, ingresalo comenzando con 549.\n\nEjemplo válido: 5493884418918");
         document.getElementById('client-phone').focus();
         return;
     }
@@ -196,7 +241,8 @@ function confirmarTurno() {
         whatsapp_barbero: numeroBarbero
     };
 
-    document.getElementById('progress').style.width = "100%";
+    const progressEl = document.getElementById('progress');
+    if (progressEl) progressEl.style.width = "100%";
 
     // 🚀 URL ACTUALIZADA: Petición HTTP directa a tu nube en Render
     fetch('https://fadebarber.onrender.com/api/nuevo-turno', {
@@ -222,8 +268,17 @@ function confirmarTurno() {
             const urlWhatsApp = `https://wa.me/${numeroDestino}?text=${mensajeCodificado}`;
 
             // Cambiamos la vista de la sección a la pantalla de éxito final
-            document.querySelectorAll('.booking-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('step-5').classList.add('active');
+            document.querySelectorAll('.booking-section').forEach(s => {
+                s.classList.remove('active');
+                s.style.display = 'none';
+            });
+            
+            const paso5 = document.getElementById('step-5');
+            if (paso5) {
+                paso5.style.display = 'block';
+                paso5.classList.add('active');
+            }
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             // 🔥 SOLUCIÓN CELULARES: Redirige en la misma pestaña para burlar los bloqueadores de pop-ups
@@ -237,4 +292,24 @@ function confirmarTurno() {
         console.error("Error al conectar con el servidor:", error);
         alert("No se pudo conectar con el sistema de reservas. Por favor, intentá más tarde.");
     });
+}
+
+// Función para pasar del Menú Principal al primer paso de los turnos
+function iniciarReserva() {
+    // Ocultamos el menú principal (Paso 0)
+    document.getElementById('step-0').style.display = 'none';
+    document.getElementById('step-0').classList.remove('active');
+    
+    // Mostramos el encabezado de los pasos y la barra de progreso
+    document.getElementById('main-steps-header').style.display = 'block';
+    
+    // Activamos y mostramos el paso 1 (Selección de Barbero)
+    const paso1 = document.getElementById('step-1');
+    paso1.style.display = 'block';
+    paso1.classList.add('active');
+    
+    // Ponemos la barra de progreso en el inicio (25%)
+    document.getElementById('progress').style.width = '25%';
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
